@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Chess</string>
+    <string name="main_menu">Main Menu</string>
+    <string name="new_game">New Game</string>
+    <string name="recorded_games">Recorded Games</string>
+    <string name="returnString">Return</string>
+    <string name="resign">Resign</string>
+    <string name="draw">Draw</string>
+    <string name="ai">AI</string>
+    <string name="undo">Undo</string>
+    <string name="next_move">Next move</string>
+    <string name="previous_move">Previous move</string>
+    <string-array name="dropDownChoices">
+        <item>Name</item>
+        <item>Date</item>
+    </string-array>
+</resources>
