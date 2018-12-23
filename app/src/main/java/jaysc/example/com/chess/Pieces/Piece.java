@@ -33,6 +33,7 @@ public abstract class Piece{
         board[index] = null;
         //update piece position vars
         index = destIndex;
+        //translate 2d coord to 1d
         row = index/8;
         column = index%8;
         //update board's vars for moved piece
@@ -40,23 +41,11 @@ public abstract class Piece{
         moves++;
     }
 
-    public int getIndex() {
-        return this.index;
-    }
-    public int getColumn() {
-        return this.column;
-    }
-    public int getRow() {
-        return this.row;
-    }
-    public char getOwner() {
-        return this.owner;
-    }
-    public int getMoves() {
-        return this.moves;
-    }
+    public int getIndex() {return this.index;}
+    public int getColumn() {return this.column;}
+    public int getRow() {return this.row;}
+    public char getOwner() {return this.owner;}
+    public int getMoves() {return this.moves;}
     //might wanna change this for saving state?
-    public String toString(){
-        return ""+owner + type;
-    }
+    public String toString(){return ""+owner + type;}
 }

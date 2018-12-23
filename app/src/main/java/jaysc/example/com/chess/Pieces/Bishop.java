@@ -2,13 +2,8 @@ package jaysc.example.com.chess.Pieces;
 
 public class Bishop extends Piece{
 
-    public Bishop(int index, char owner){
-        super('B',index,owner);
-    }
-
-    public Bishop(Bishop b) {
-        super(b);
-    }
+    public Bishop(int index, char owner){super('B',index,owner);}
+    public Bishop(Bishop b) {super(b);}
 
     public boolean isMoveValid(int destIndex, Piece[]board){//knows if a piece is in destination coord
         int destRow = destIndex/8;

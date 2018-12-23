@@ -1,24 +1,9 @@
 package jaysc.example.com.chess.Pieces;
 
 public class King extends Piece{
+    public King(int index, char owner){super('K',index,owner);}
+    public King(King k) {super(k);}
 
-    protected boolean castled;
-    protected int rookPrevCol;
-    protected int rookDestCol;
-
-    public King(int index, char owner){
-        super('K',index,owner);
-        castled = false;
-        rookPrevCol = -1;
-        rookDestCol = -1;
-    }
-
-    public King(King k) {
-        super(k);
-        castled = k.castled;
-        rookPrevCol = k.rookPrevCol;
-        rookDestCol = k.rookDestCol;
-    }
     public boolean isMoveValid(int destIndex,Piece[]board){
         int destRow = destIndex/8;
         int destCol = destIndex%8;
@@ -53,21 +38,14 @@ public class King extends Piece{
             //store past and future rook position (only need column since same row as king)
             if (colDiff > 0) {//left rook castling for white, right rook castling for black
                 rook = board[(this.row*8)+0];//could be a rook, gotta check
-                rookPrevCol = 0;
-                //System.out.println("left side castling?");
-                rookDestCol = destCol + 1;
             }else if (colDiff < 0) {//right rook castling for white, left rook castling for black
                 rook = board[(this.row*8)+7];
-                rookPrevCol = 7;
-                //System.out.println("right side castling?");
-                rookDestCol = destCol - 1;
             }
             //[can assume that king never moved and no places in check]
             //if there is a rook who is ours and never moved(including our king)
             if (rook!=null && rook instanceof Rook && rook.owner == this.owner && rook.moves == 0) {
                 //change rook and king position
                 //System.out.println("Castling success!!!");
-                castled = true;
                 return true;
             }
         }
@@ -90,7 +68,6 @@ public class King extends Piece{
     }
 
     public void move(int destIndex,Piece[]board) {
-
         int destRow = destIndex/8;
         int destCol = destIndex%8;
         Piece destPiece = board[destIndex];
@@ -109,10 +86,6 @@ public class King extends Piece{
             }else if (colDiff < 0) {//right rook castling for white, left rook castling for black
                 board[(this.row*8)+7].move((this.row*8)+destCol-1,board);
             }
-            //revert values
-            castled = false;
-            rookPrevCol = -1;
-            rookDestCol = -1;
         }
         //do normal stuff for move
         super.move(destIndex,board);
