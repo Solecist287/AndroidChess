@@ -38,7 +38,6 @@ public class Pawn extends Piece{
         //pawn may move exactly two spaces forward
         else if (destRow == this.row - (2*sign) && destCol == this.column && board [((this.row - (1*sign))*8)+this.column] == null
                     && destPiece == null && moves==0) {
-                moved_2_spaces = GameActivity.turnCount;
                 return true;
         }
         //pawn may move exactly one space diagonally in either forward direction (must capture or en passant)
@@ -63,6 +62,8 @@ public class Pawn extends Piece{
 
         if (Math.abs(rowDiff) == 1 && Math.abs(colDiff) == 1 && destPiece == null) {//en passant
             board[(this.row*8)+destCol] = null;
+        }else if (Math.abs(rowDiff) == 2) {//two spaces
+            moved_2_spaces = GameActivity.turnCount;
         }
         //do normal move
         super.move(destIndex,board);

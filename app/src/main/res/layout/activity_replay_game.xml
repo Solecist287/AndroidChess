@@ -30,12 +30,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="prevMove"
+            android:gravity="center"
             android:text="@string/previous_move"
             />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="nextMove"
+            android:gravity="center"
             android:text="@string/next_move"
             />
     </LinearLayout>
