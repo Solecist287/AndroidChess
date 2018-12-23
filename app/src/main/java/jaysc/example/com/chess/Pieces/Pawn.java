@@ -29,52 +29,24 @@ public class Pawn extends Piece{
         if (destPiece != null && destPiece.owner == this.owner) {
             return false;
         }
-        if (this.owner == 'w') {
-            //pawn may move exactly one space forward
-            if (destRow == this.row - 1 && destCol == this.column && destPiece == null) {
-                return true;
-            }
-            //pawn may move exactly two spaces forward
-            else if (destRow == this.row - 2 && destCol == this.column && board [((this.row - 1)*8)+this.column] == null
-                        && destPiece == null && moves==0) {
-                    moved_2_spaces = GameActivity.turnCount;
-                    return true;
-            }
-            //pawn may move exactly one space diagonally in either forward direction (must capture or en passant)
-            else if (rowDiff == 1 && Math.abs(colDiff) == 1 && destPiece != null && destPiece.owner == 'b') { //direct capture
-                return true;
-            } else if (rowDiff == 1 && colDiff == 1 && destPiece == null) { //en passant capturing white's left
-                if (board[((destRow + 1)*8)+destCol] != null && board[((destRow + 1)*8)+destCol] instanceof Pawn && board[((destRow + 1)*8)+destCol].moves == 1 && ((Pawn)board[((destRow + 1)*8)+destCol]).moved_2_spaces == GameActivity.turnCount - 1) {
-                    return true;
-                }
-            } else if (rowDiff == 1 && colDiff == -1  && destPiece == null) { //en passant capturing white's right
-                if (board[((destRow + 1)*8)+destCol] != null && board[((destRow + 1)*8)+destCol] instanceof Pawn && board[((destRow + 1)*8)+destCol].moves == 1 && ((Pawn)board[((destRow + 1)*8)+destCol]).moved_2_spaces == GameActivity.turnCount - 1) {
-                    return true;
-                }
-            }
+        int sign;//1 for white, -1 for black
+        if (owner == 'w')sign=1; else sign=-1;
+        //pawn may move exactly one space forward
+        if (destRow == this.row - (1*sign) && destCol == this.column && destPiece == null) {
+            return true;
         }
-        else if (this.owner == 'b') {
-            //pawn may move exactly one space forward
-            if (destRow == this.row + 1 && destCol == this.column && destPiece == null) {
-                return true;
-            }
-            //pawn may move exactly two spaces forward
-            else if (destRow == this.row + 2 && destCol == this.column && board [((this.row + 1)*8)+this.column] == null
-                    && destPiece == null && moves == 0) {
+        //pawn may move exactly two spaces forward
+        else if (destRow == this.row - (2*sign) && destCol == this.column && board [((this.row - (1*sign))*8)+this.column] == null
+                    && destPiece == null && moves==0) {
                 moved_2_spaces = GameActivity.turnCount;
                 return true;
-            }
-            //pawn may move exactly one space diagonally in either forward direction (must capture or en passant)
-            else if (rowDiff == -1 && Math.abs(colDiff) == 1 && destPiece != null && destPiece.owner == 'w') { //direct capture
+        }
+        //pawn may move exactly one space diagonally in either forward direction (must capture or en passant)
+        else if (rowDiff == (1*sign) && Math.abs(colDiff) == 1 && destPiece != null && owner!=destPiece.owner) { //direct capture
+            return true;
+        }else if (rowDiff == (1*sign) && Math.abs(colDiff) == 1 && destPiece == null) { //en passant capturing white's left
+            if (board[((destRow + (1*sign))*8)+destCol] != null && board[((destRow + (1*sign))*8)+destCol] instanceof Pawn && board[((destRow + (1*sign))*8)+destCol].moves == 1 && ((Pawn)board[((destRow + (1*sign))*8)+destCol]).moved_2_spaces == GameActivity.turnCount - 1) {
                 return true;
-            } else if (rowDiff == -1 && colDiff == 1 && destPiece == null) { //en passant capturing black's right
-                if (board[((destRow - 1)*8)+destCol] != null && board[((destRow - 1)*8)+destCol] instanceof Pawn && board[((destRow - 1)*8)+destCol].moves == 1 && ((Pawn)board[((destRow - 1)*8)+destCol]).moved_2_spaces == GameActivity.turnCount - 1) {
-                    return true;
-                }
-            } else if (rowDiff == -1 && colDiff == -1 && destPiece == null) {//en passant capturing black's left
-                if (board[((destRow - 1)*8)+destCol] != null && board[((destRow - 1)*8)+destCol] instanceof Pawn && board[((destRow - 1)*8)+destCol].moves == 1 && ((Pawn)board[((destRow - 1)*8)+destCol]).moved_2_spaces == GameActivity.turnCount - 1) {
-                    return true;
-                }
             }
         }
         return false;
