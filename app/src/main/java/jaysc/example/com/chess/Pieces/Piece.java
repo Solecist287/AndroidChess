@@ -41,11 +41,11 @@ public abstract class Piece{
         moves++;
     }
 
-    public int getIndex() {return this.index;}
-    public int getColumn() {return this.column;}
-    public int getRow() {return this.row;}
-    public char getOwner() {return this.owner;}
-    public int getMoves() {return this.moves;}
+    public int getIndex() {return index;}
+    public int getColumn() {return column;}
+    public int getRow() {return row;}
+    public char getOwner() {return owner;}
+    public int getMoves() {return moves;}
     //might wanna change this for saving state?
     public String toString(){return ""+owner + type;}
 }

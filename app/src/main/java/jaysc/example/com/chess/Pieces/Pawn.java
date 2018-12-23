@@ -22,21 +22,21 @@ public class Pawn extends Piece{
         Piece destPiece = board[destIndex];
 
         //find differences between rows and columns
-        int rowDiff = this.row - destRow;//x
-        int colDiff = this.column - destCol;//y
+        int rowDiff = row - destRow;//x
+        int colDiff = column - destCol;//y
 
         //cannot capture own piece
-        if (destPiece != null && destPiece.owner == this.owner) {
+        if (destPiece != null && destPiece.owner == owner) {
             return false;
         }
         int sign;//1 for white, -1 for black
         if (owner == 'w')sign=1; else sign=-1;
         //pawn may move exactly one space forward
-        if (destRow == this.row - (1*sign) && destCol == this.column && destPiece == null) {
+        if (destRow == row - (1*sign) && destCol == column && destPiece == null) {
             return true;
         }
         //pawn may move exactly two spaces forward
-        else if (destRow == this.row - (2*sign) && destCol == this.column && board [((this.row - (1*sign))*8)+this.column] == null
+        else if (destRow == row - (2*sign) && destCol == column && board [((row - (1*sign))*8)+ column] == null
                     && destPiece == null && moves==0) {
                 return true;
         }
@@ -57,11 +57,11 @@ public class Pawn extends Piece{
         Piece destPiece = board[destIndex];
 
         //find differences between rows and columns
-        int rowDiff = this.row - destRow;//x
-        int colDiff = this.column - destCol;//y
+        int rowDiff = row - destRow;//x
+        int colDiff = column - destCol;//y
 
         if (Math.abs(rowDiff) == 1 && Math.abs(colDiff) == 1 && destPiece == null) {//en passant
-            board[(this.row*8)+destCol] = null;
+            board[(row*8)+destCol] = null;
         }else if (Math.abs(rowDiff) == 2) {//two spaces
             moved_2_spaces = GameActivity.turnCount;
         }

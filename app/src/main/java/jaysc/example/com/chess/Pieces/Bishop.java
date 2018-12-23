@@ -10,8 +10,8 @@ public class Bishop extends Piece{
         int destCol = destIndex%8;
         Piece destPiece = board[destIndex];
         //find differences between rows and columns
-        int rowDiff = this.row - destRow;//x
-        int colDiff = this.column - destCol;//y
+        int rowDiff = row - destRow;//x
+        int colDiff = column - destCol;//y
         //used to check for obstructing pieces
         int curRow;
         int curCol;
@@ -20,14 +20,14 @@ public class Bishop extends Piece{
 
         //check if dest is diagonal from bishop
         //also checks that if dest is occupied, that it is enemy piece
-        if (Math.abs(rowDiff) != Math.abs(colDiff) || (destPiece!=null && destPiece.owner == this.owner)) {
+        if (Math.abs(rowDiff) != Math.abs(colDiff) || (destPiece!=null && destPiece.owner == owner)) {
             return false;
         }
         if ((rowDiff>0 && colDiff>0)||(rowDiff<0 && colDiff<0)) {//top left or bottom right diagonal
-            curRow = Math.min(this.row, destRow)+1;
-            curCol = Math.min(this.column, destCol)+1;
-            endRow = Math.max(this.row, destRow);
-            endCol = Math.max(this.column, destCol);
+            curRow = Math.min(row, destRow)+1;
+            curCol = Math.min(column, destCol)+1;
+            endRow = Math.max(row, destRow);
+            endCol = Math.max(column, destCol);
             while (curRow<endRow && curCol<endCol) {
                 int curIndex = (curRow*8)+curCol;
                 if (board[curIndex]!=null) {//if piece is obstructing
@@ -38,10 +38,10 @@ public class Bishop extends Piece{
             }
             return true;
         }else if ((rowDiff>0 && colDiff<0)||(rowDiff<0 && colDiff>0)) {//top right or bottom left diagonal
-            curRow = Math.max(this.row, destRow)-1;
-            curCol = Math.min(this.column, destCol)+1;
-            endRow = Math.min(this.row, destRow);
-            endCol = Math.max(this.column, destCol);
+            curRow = Math.max(row, destRow)-1;
+            curCol = Math.min(column, destCol)+1;
+            endRow = Math.min(row, destRow);
+            endCol = Math.max(column, destCol);
             while (curRow>endRow && curCol<endCol) {
                 int curIndex = (curRow*8)+curCol;
                 if (board[curIndex]!=null) {//if piece is obstructing

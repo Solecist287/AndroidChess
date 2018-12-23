@@ -5,15 +5,16 @@ public class Knight extends Piece{
     public Knight(Knight k){super(k);}
 
     public boolean isMoveValid(int destIndex,Piece[]board){//knows if a piece is in destination coord
+        Piece destPiece = board[destIndex];
+        if (destPiece!=null && destPiece.owner == owner) {//if piece in dest, piece must be enemy
+            return false;
+        }
         int destRow = destIndex/8;
         int destCol = destIndex%8;
-        Piece destPiece = board[destIndex];
+        int absRowDiff = Math.abs(row-destRow);
+        int absColDiff = Math.abs(column-destCol);
         //check if dest is in moveset
-        if ((Math.abs(this.row-destRow) == 1 && Math.abs(this.column-destCol) == 2)
-                ||(Math.abs(this.row-destRow) == 2 && Math.abs(this.column-destCol) == 1)) {
-            if (destPiece!=null && destPiece.owner == this.owner) {//if piece in dest, piece must be enemy
-                return false;
-            }
+        if ((absRowDiff == 1 && absColDiff == 2) ||(absRowDiff == 2 && absColDiff == 1)) {
             return true;
         }
         return false;

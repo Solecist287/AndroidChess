@@ -10,20 +10,20 @@ public class Rook extends Piece{
         int destCol = destIndex%8;
         Piece destPiece = board[destIndex];
         //if destination has a piece, then destpiece and currentpiece must be on different teams
-        if (destPiece!=null && destPiece.owner == this.owner) {return false;}
+        if (destPiece!=null && destPiece.owner == owner) {return false;}
         //check if dest is in moveset of piece
-        if (this.row == destRow) {//dest in same row
+        if (row == destRow) {//dest in same row
             //check spaces in between for obstructions
-            for (int i = Math.min(destCol, this.column)+1; i < Math.max(destCol, this.column); i++) {
-                if (board[(this.row*8)+i]!=null) {//piece obstructing
+            for (int i = Math.min(destCol, column)+1; i < Math.max(destCol, column); i++) {
+                if (board[(row*8)+i]!=null) {//piece obstructing
                     return false;
                 }
             }
             return true;
-        }else if (this.column == destCol) {//dest in same row
+        }else if (column == destCol) {//dest in same row
             //check spaces in between for obstructions
-            for (int i = Math.min(destRow, this.row)+1; i < Math.max(destRow, this.row); i++) {
-                if (board[(i*8)+this.column]!=null) {//piece obstructing
+            for (int i = Math.min(destRow, row)+1; i < Math.max(destRow, row); i++) {
+                if (board[(i*8)+column]!=null) {//piece obstructing
                     return false;
                 }
             }
