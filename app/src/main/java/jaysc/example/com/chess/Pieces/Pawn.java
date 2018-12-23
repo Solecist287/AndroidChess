@@ -29,30 +29,17 @@ public class Pawn extends Piece{
         if (destPiece != null && destPiece.owner == this.owner) {
             return false;
         }
-
-        if (this.owner == 'w' && moves == 0) {
+        if (this.owner == 'w') {
             //pawn may move exactly one space forward
             if (destRow == this.row - 1 && destCol == this.column && destPiece == null) {
                 return true;
             }
-
             //pawn may move exactly two spaces forward
-            if (destRow == this.row - 2 && destCol == this.column && board [((this.row - 1)*8)+this.column] == null && destPiece == null) {
-                moved_2_spaces = GameActivity.turnCount;
-                return true;
+            else if (destRow == this.row - 2 && destCol == this.column && board [((this.row - 1)*8)+this.column] == null
+                        && destPiece == null && moves==0) {
+                    moved_2_spaces = GameActivity.turnCount;
+                    return true;
             }
-
-            //pawn may move exactly one space diagonally in either forward direction (must capture)
-            if (rowDiff == 1 && Math.abs(colDiff) == 1 && destPiece != null && destPiece.owner == 'b') {
-                return true;
-            }
-
-        } else if (this.owner == 'w' && moves != 0) {
-            //pawn may move exactly one space forward
-            if (destRow == this.row - 1 && destCol == this.column && destPiece == null) {
-                return true;
-            }
-
             //pawn may move exactly one space diagonally in either forward direction (must capture or en passant)
             else if (rowDiff == 1 && Math.abs(colDiff) == 1 && destPiece != null && destPiece.owner == 'b') { //direct capture
                 return true;
@@ -65,29 +52,18 @@ public class Pawn extends Piece{
                     return true;
                 }
             }
-        } else if (this.owner == 'b' && moves == 0) {
+        }
+        else if (this.owner == 'b') {
             //pawn may move exactly one space forward
             if (destRow == this.row + 1 && destCol == this.column && destPiece == null) {
                 return true;
             }
-
             //pawn may move exactly two spaces forward
-            if (destRow == this.row + 2 && destCol == this.column && board [((this.row + 1)*8)+this.column] == null && destPiece == null) {
+            else if (destRow == this.row + 2 && destCol == this.column && board [((this.row + 1)*8)+this.column] == null
+                    && destPiece == null && moves == 0) {
                 moved_2_spaces = GameActivity.turnCount;
                 return true;
             }
-
-            //pawn may move exactly one space diagonally in either forward direction (must capture)
-            if (rowDiff == -1 && Math.abs(colDiff) == 1 && destPiece != null && destPiece.owner == 'w') {
-                return true;
-            }
-
-        } else if (this.owner == 'b' && moves != 0) {
-            //pawn may move exactly one space forward
-            if (destRow == this.row + 1 && destCol == this.column && destPiece == null) {
-                return true;
-            }
-
             //pawn may move exactly one space diagonally in either forward direction (must capture or en passant)
             else if (rowDiff == -1 && Math.abs(colDiff) == 1 && destPiece != null && destPiece.owner == 'w') { //direct capture
                 return true;
