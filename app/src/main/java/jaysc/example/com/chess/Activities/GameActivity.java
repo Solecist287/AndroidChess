@@ -265,16 +265,16 @@ public class GameActivity extends AppCompatActivity {
                 // the user clicked on promotionLevels[which]
                 String entry = moves.get(moves.size() - 1);//get current move string
                 if (which == 0) {//Queen
-                    pieces[chessboardAdapter.selectedPieceIndex] = new Queen(chessboardAdapter.selectedPieceIndex, owner);
+                    pieces[selectedPieceIndex] = new Queen(selectedPieceIndex, owner);
                     entry += ",Q";
                 } else if (which == 1) {//Rook
-                    pieces[chessboardAdapter.selectedPieceIndex] = new Rook(chessboardAdapter.selectedPieceIndex, owner);
+                    pieces[selectedPieceIndex] = new Rook(selectedPieceIndex, owner);
                     entry += ",R";
                 } else if (which == 2) {//Bishop
-                    pieces[chessboardAdapter.selectedPieceIndex] = new Bishop(chessboardAdapter.selectedPieceIndex, owner);
+                    pieces[selectedPieceIndex] = new Bishop(selectedPieceIndex, owner);
                     entry += ",B";
                 } else if (which == 3) {//Knight
-                    pieces[chessboardAdapter.selectedPieceIndex] = new Knight(chessboardAdapter.selectedPieceIndex, owner);
+                    pieces[selectedPieceIndex] = new Knight(selectedPieceIndex, owner);
                     //add move to list
                     entry += ",N";
                 }
