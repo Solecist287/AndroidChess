@@ -40,6 +40,14 @@ public class ImageAdapter extends BaseAdapter {
             imageView.setLayoutParams(new ViewGroup.LayoutParams(90, 90));
             imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             imageView.setPadding(8, 8, 8, 8);
+            //choose black or white for square
+            int row = position/8;
+            int col = position%8;
+            if ((row%2==0&&col%2==0)||(row%2!=0&&col%2!=0)){//white space
+                imageView.setBackgroundColor(Color.parseColor("#d8d8d8")); //#9E9DA3
+            }else{//black space
+                imageView.setBackgroundColor(Color.parseColor("#30313e")); //#716792
+            }
         } else {
             imageView = (ImageView) convertView;
         }
@@ -84,21 +92,11 @@ public class ImageAdapter extends BaseAdapter {
                 imageView.setImageResource(R.drawable.king_black);
             }
         }
-        //choose black or white for square
-        int row = position/8;
-        int col = position%8;
-        if ((row%2==0&&col%2==0)||(row%2!=0&&col%2!=0)){//white space
-            if (position == selectedPieceIndex) {
-                imageView.setBackgroundColor(Color.parseColor("#50e0ff"));
-            } else {
-                imageView.setBackgroundColor(Color.parseColor("#d8d8d8")); //#9E9DA3
-            }
-        }else{//black space
-            if (position == selectedPieceIndex) {
-                imageView.setBackgroundColor(Color.parseColor("#1089a3"));
-            } else {
-                imageView.setBackgroundColor(Color.parseColor("#30313e")); //#716792
-            }
+        if (position == selectedPieceIndex) {
+           // imageView.setBackgroundColor(Color.parseColor("#50e0ff"));
+            imageView.setColorFilter(Color.CYAN);
+        }else{
+            imageView.setColorFilter(0);
         }
         return imageView;
     }

@@ -42,7 +42,7 @@ public class GameActivity extends AppCompatActivity {
         drawRequest = -1;
         undo = -1;//arbitrary val
         turnCount = 0;
-        moves = new ArrayList<String>();
+        moves = new ArrayList<>();
         //create piece array to hold pieces
         pieces = new Piece[64];
         //puts pieces in original spot
@@ -51,7 +51,7 @@ public class GameActivity extends AppCompatActivity {
         chessboardAdapter = new ImageAdapter(this, pieces);
         //fetch gridview from xml variable name
         chessboardAdapter.selectedPieceIndex = -1;
-        GridView gridview = (GridView) findViewById(R.id.chessboard);
+        GridView gridview = findViewById(R.id.chessboard);
         //connect gridview to its adapter
         gridview.setAdapter(chessboardAdapter);
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -144,6 +144,7 @@ public class GameActivity extends AppCompatActivity {
     private void evaluateTurn() {
         //check if next guy is in trouble
         King currentKing = getCurrentKing(pieces);
+        if (currentKing == null){return;}
         if (noSafeMoves()) {//stalemate or checkmate for next guy
             String popupMessage = "";
             if (currentKing.inCheck(pieces)) {//checkmate
@@ -350,15 +351,15 @@ public class GameActivity extends AppCompatActivity {
     public void aiMove(View view) {
         //choose random valid move and do it
         //this is a list of possible pieces
-        ArrayList<Piece> possiblePieces = new ArrayList<Piece>();
+        ArrayList<Piece> possiblePieces = new ArrayList<>();
         //this is a list of lists of possible move indices per possible piece
-        ArrayList<ArrayList<Integer>> allPossiblemoves = new ArrayList<ArrayList<Integer>>();
+        ArrayList<ArrayList<Integer>> allPossiblemoves = new ArrayList<>();
         //get list of possible pieces
         for (int i = 0; i < 64; i++) {
             Piece curPiece = pieces[i];
             //curpiece must be owned by AI
             if (curPiece != null && curPiece.getOwner() == turn) {
-                ArrayList<Integer> curPieceMoves = new ArrayList<Integer>();
+                ArrayList<Integer> curPieceMoves = new ArrayList<>();
                 //get list of possible moves
                 for (int j = 0; j < 64; j++) {
                     //if can move and does not result in check for AI (assumed that there are possible moves already)
@@ -388,23 +389,25 @@ public class GameActivity extends AppCompatActivity {
             //pawn promotion
             String levels[] = {"Queen", "Rook", "Bishop", "Knight"};
             int randomLevel = (int) (Math.random() * (levels.length));
+            String entry = moves.get(moves.size() - 1);//get current move string
             if (randomLevel == 0) {//queen
                 pieces[randomDest] = new Queen(randomDest, turn);
                 //add move to list
-                moves.get(chessboardAdapter.selectedPieceIndex).concat(",Q");
+                entry+=",Q";
             } else if (randomLevel == 1) {//rook
                 pieces[randomDest] = new Rook(randomDest, turn);
                 //add move to list
-                moves.get(chessboardAdapter.selectedPieceIndex).concat(",R");
+                entry+=",R";
             } else if (randomLevel == 2) {//bishop
                 pieces[randomDest] = new Bishop(randomDest, turn);
                 //add move to list
-                moves.get(chessboardAdapter.selectedPieceIndex).concat(",B");
+                entry+=",B";
             } else if (randomLevel == 3) {//knight
                 pieces[randomDest] = new Knight(randomDest, turn);
                 //add move to list
-                moves.get(chessboardAdapter.selectedPieceIndex).concat(",N");
+                entry+=",N";
             }
+            moves.set(moves.size() - 1, entry);
         }
         //change turn, redraw chessboard, evaluate if next guy is screwed
         concludeTurn();
