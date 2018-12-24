@@ -1,7 +1,7 @@
 package jaysc.example.com.chess.Pieces;
 
 public class Knight extends Piece{
-    public Knight(int index, char owner){super('N',index,owner);}
+    public Knight(int index, char owner){super(index,owner);}
     public Knight(Knight k){super(k);}
 
     public boolean isMoveValid(int destIndex,Piece[]board){//knows if a piece is in destination coord
@@ -18,5 +18,8 @@ public class Knight extends Piece{
             return true;
         }
         return false;
+    }
+    public int getImageIndex(){
+        if (owner == 'b') return 4; else return 5;
     }
 }

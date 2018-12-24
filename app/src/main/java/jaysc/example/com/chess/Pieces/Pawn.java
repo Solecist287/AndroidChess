@@ -3,11 +3,10 @@ package jaysc.example.com.chess.Pieces;
 import jaysc.example.com.chess.Activities.GameActivity;
 
 public class Pawn extends Piece{
-
     protected int moved_2_spaces; //set equal to turnCount whenever a pawn moves 2 spaces forward
 
     public Pawn(int index, char owner){
-        super('p',index,owner);
+        super(index,owner);
         moved_2_spaces = -1;
     }
 
@@ -67,5 +66,8 @@ public class Pawn extends Piece{
         }
         //do normal move
         super.move(destIndex,board);
+    }
+    public int getImageIndex(){
+        if (owner == 'b') return 6; else return 7;
     }
 }

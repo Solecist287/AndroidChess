@@ -1,6 +1,7 @@
 package jaysc.example.com.chess.Adapters;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +11,16 @@ import android.widget.ImageView;
 import jaysc.example.com.chess.Pieces.*;
 import jaysc.example.com.chess.R;
 
+
 public class ImageAdapter extends BaseAdapter {
-    private Context mContext;
     public int selectedPieceIndex = -1;
+    private Context mContext;
     private Piece[] pieces;
+    private TypedArray pieceImgs;
     public ImageAdapter(Context c, Piece[] pieces) {
         mContext = c;
         this.pieces = pieces;
+        pieceImgs = mContext.getResources().obtainTypedArray(R.array.piece_imgs);
     }
 
     public int getCount() {
@@ -55,42 +59,8 @@ public class ImageAdapter extends BaseAdapter {
         Piece p = pieces[position];
         if (p==null) {
             imageView.setImageResource(0);
-        }else if (p instanceof Pawn){
-            if (p.getOwner()=='w'){
-                imageView.setImageResource(R.drawable.pawn_white);
-            }else{
-                imageView.setImageResource(R.drawable.pawn_black);
-            }
-        }else if (p instanceof Rook){
-            if (p.getOwner()=='w'){
-                imageView.setImageResource(R.drawable.rook_white);
-            }else{
-                imageView.setImageResource(R.drawable.rook_black);
-            }
-        }else if (p instanceof Bishop){
-            if (p.getOwner()=='w'){
-                imageView.setImageResource(R.drawable.bishop_white);
-            }else{
-                imageView.setImageResource(R.drawable.bishop_black);
-            }
-        }else if (p instanceof Knight){
-            if (p.getOwner()=='w'){
-                imageView.setImageResource(R.drawable.knight_white);
-            }else{
-                imageView.setImageResource(R.drawable.knight_black);
-            }
-        }else if (p instanceof Queen){
-            if (p.getOwner()=='w'){
-                imageView.setImageResource(R.drawable.queen_white);
-            }else{
-                imageView.setImageResource(R.drawable.queen_black);
-            }
-        }else if (p instanceof King){
-            if (p.getOwner()=='w'){
-                imageView.setImageResource(R.drawable.king_white);
-            }else{
-                imageView.setImageResource(R.drawable.king_black);
-            }
+        }else {
+            imageView.setImageResource(pieceImgs.getResourceId(p.getImageIndex(),0));
         }
         if (position == selectedPieceIndex) {
            // imageView.setBackgroundColor(Color.parseColor("#50e0ff"));

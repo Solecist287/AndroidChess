@@ -1,7 +1,7 @@
 package jaysc.example.com.chess.Pieces;
 
 public class King extends Piece{
-    public King(int index, char owner){super('K',index,owner);}
+    public King(int index, char owner){super(index,owner);}
     public King(King k) {super(k);}
 
     public boolean isMoveValid(int destIndex,Piece[]board){
@@ -83,5 +83,8 @@ public class King extends Piece{
         }
         //do normal stuff for move
         super.move(destIndex,board);
+    }
+    public int getImageIndex(){
+        if (owner == 'b') return 2; else return 3;
     }
 }

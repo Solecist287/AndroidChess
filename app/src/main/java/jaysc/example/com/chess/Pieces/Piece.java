@@ -5,11 +5,9 @@ public abstract class Piece{
 
     protected int row, column, index;
     protected char owner; //can be 'w' or 'b' AKA white or black
-    protected char type;//e.g. 'N' knight
     protected int moves;
 
-    public Piece(char type, int index, char owner){
-        this.type = type;
+    public Piece(int index, char owner){
         this.index = index;
         this.row = index/8;
         this.column = index%8;
@@ -22,12 +20,11 @@ public abstract class Piece{
         row = p.row;
         index = p.index;
         owner = p.owner;
-        type = p.type;
         moves = p.moves;
     }
     //funcs
     public abstract boolean isMoveValid(int destIndex, Piece[]board);//knows if a piece is in destination coord
-
+    public abstract int getImageIndex();
     public void move(int destIndex, Piece[]board) {
         //clear piece's prev location
         board[index] = null;
@@ -47,5 +44,6 @@ public abstract class Piece{
     public char getOwner() {return owner;}
     public int getMoves() {return moves;}
     //might wanna change this for saving state?
-    public String toString(){return ""+owner + type;}
+   //should make abstract and not need type variable
+    // public String toString(){return ""+owner + type;}
 }

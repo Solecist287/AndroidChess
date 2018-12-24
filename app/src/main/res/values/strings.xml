@@ -14,4 +14,18 @@
         <item>Name</item>
         <item>Date</item>
     </string-array>
+    <integer-array name="piece_imgs">
+        <item>@drawable/bishop_black</item>
+        <item>@drawable/bishop_white</item>
+        <item>@drawable/king_black</item>
+        <item>@drawable/king_white</item>
+        <item>@drawable/knight_black</item>
+        <item>@drawable/knight_white</item>
+        <item>@drawable/pawn_black</item>
+        <item>@drawable/pawn_white</item>
+        <item>@drawable/queen_black</item>
+        <item>@drawable/queen_white</item>
+        <item>@drawable/rook_black</item>
+        <item>@drawable/rook_white</item>
+    </integer-array>
 </resources>

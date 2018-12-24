@@ -2,7 +2,7 @@ package jaysc.example.com.chess.Pieces;
 
 public class Bishop extends Piece{
 
-    public Bishop(int index, char owner){super('B',index,owner);}
+    public Bishop(int index, char owner){super(index,owner);}
     public Bishop(Bishop b) {super(b);}
 
     public boolean isMoveValid(int destIndex, Piece[]board){//knows if a piece is in destination coord
@@ -53,5 +53,8 @@ public class Bishop extends Piece{
             return true;
         }
         return false;
+    }
+    public int getImageIndex(){
+        if (owner == 'b') return 0; else return 1;
     }
 }

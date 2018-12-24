@@ -60,7 +60,6 @@ public class GameActivity extends AppCompatActivity {
                 if (pieces[position] != null && pieces[position].getOwner() == turn) {
                     //setting selectedpiece only if it is owned by player
                     chessboardAdapter.selectedPieceIndex = position;
-                    chessboardAdapter.notifyDataSetChanged();
                 } else if (chessboardAdapter.selectedPieceIndex != -1) {
                     //entertains move if there is a selectedpiece and clicked destination
                     Piece selectedPiece = pieces[chessboardAdapter.selectedPieceIndex];
@@ -80,8 +79,8 @@ public class GameActivity extends AppCompatActivity {
                     }
                     //clear selectedpieceindex
                     chessboardAdapter.selectedPieceIndex = -1;
-                    chessboardAdapter.notifyDataSetChanged();
                 }
+                chessboardAdapter.notifyDataSetChanged();
             }
         });
         //initial message
