@@ -25,12 +25,16 @@ import jaysc.example.com.chess.R;
 import jaysc.example.com.chess.Pieces.*;
 
 public class GameActivity extends AppCompatActivity {
-    public char turn;
-    public int drawRequest;
-    public int undo;
+    private char turn;
+    private int drawRequest;
+    private int undo;
     public static int turnCount;
-    public ArrayList<String> moves;
-    public Piece[] pieces;
+    private ArrayList<String> moves;
+    private Piece[] pieces;
+    private King currentKing;
+    private King whiteKing;
+    private King blackKing;
+
     public ChessboardAdapter chessboardAdapter;
 
     @Override
@@ -83,6 +87,8 @@ public class GameActivity extends AppCompatActivity {
                 chessboardAdapter.notifyDataSetChanged();
             }
         });
+        //initial currentKing
+        currentKing = whiteKing;
         //initial message
         Toast.makeText(GameActivity.this, "White's turn", Toast.LENGTH_LONG).show();
     }
@@ -93,7 +99,8 @@ public class GameActivity extends AppCompatActivity {
         board[1] = new Knight(1, 'b');
         board[2] = new Bishop(2, 'b');
         board[3] = new Queen(3, 'b');
-        board[4] = new King(4, 'b');
+        blackKing = new King(4, 'b');
+        board[4] = blackKing;
         board[5] = new Bishop(5, 'b');
         board[6] = new Knight(6, 'b');
         board[7] = new Rook(7, 'b');
@@ -114,7 +121,8 @@ public class GameActivity extends AppCompatActivity {
         board[57] = new Knight(57, 'w');
         board[58] = new Bishop(58, 'w');
         board[59] = new Queen(59, 'w');
-        board[60] = new King(60, 'w');
+        whiteKing = new King(60, 'w');
+        board[60] = whiteKing;
         board[61] = new Bishop(61, 'w');
         board[62] = new Knight(62, 'w');
         board[63] = new Rook(63, 'w');
@@ -131,12 +139,16 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void toggleTurn() {
-        if (turn == 'w') turn = 'b'; else turn = 'w';
+        if (turn == 'w') {
+            turn = 'b';
+            currentKing = blackKing;
+        } else {
+            turn = 'w';
+            currentKing = whiteKing;
+        }
     }
-
     private void evaluateTurn() {
         //check if next guy is in trouble
-        King currentKing = getCurrentKing(pieces);
         if (currentKing == null){return;}
         if (noSafeMoves()) {//stalemate or checkmate for next guy
             String popupMessage = "";
@@ -209,12 +221,13 @@ public class GameActivity extends AppCompatActivity {
 
     private boolean checkAfterMove(Piece[] board, int startIndex, int endIndex) {
         Piece[] b = duplicateBoard(board);
+        King k = (King)(b[currentKing.getIndex()]);
         //get piece of hypothetical pieces
         Piece chosenPiece = b[startIndex];
         //move this piece
         chosenPiece.move(endIndex, b);
         //return if king is in check or not
-        return getCurrentKing(b).inCheck(b);
+        return k.inCheck(b);
     }
 
     private Piece[] duplicateBoard(Piece[] p) {
@@ -240,16 +253,7 @@ public class GameActivity extends AppCompatActivity {
         return result;
     }
 
-    private King getCurrentKing(Piece[] p) {
-        for (int i = 0; i < 64; i++) {
-            if (p[i] != null && p[i].getOwner() == turn && p[i] instanceof King) {
-                return (King) (p[i]);
-            }
-        }
-        return null;
-    }
-
-    public void showPawnPopup(final int selectedPieceIndex, final char owner) {
+    private void showPawnPopup(final int selectedPieceIndex, final char owner) {
         String[] promotionLevels = {"Queen", "Rook", "Bishop", "Knight"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Promote Pawn...");
@@ -279,7 +283,7 @@ public class GameActivity extends AppCompatActivity {
         builder.show();
     }
 
-    public void showSavePopup(final String titleMessage) {
+    private void showSavePopup(final String titleMessage) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(titleMessage);
         // Set up the input
