@@ -209,7 +209,7 @@ public class GameActivity extends AppCompatActivity {
                     //current piece is able to move somewhere
                     if (curPiece.isMoveValid(j, pieces)) {
                         //check if move takes king out of check
-                        if (!checkAfterMove(duplicateBoard(pieces), i, j)) {
+                        if (!checkAfterMove(pieces, i, j)) {
                             return false;
                         }
                     }
@@ -358,7 +358,7 @@ public class GameActivity extends AppCompatActivity {
                 //get list of possible moves
                 for (int j = 0; j < 64; j++) {
                     //if can move and does not result in check for AI (assumed that there are possible moves already)
-                    if (curPiece.isMoveValid(j, pieces) && !checkAfterMove(duplicateBoard(pieces), curPiece.getIndex(), j)) {
+                    if (curPiece.isMoveValid(j, pieces) && !checkAfterMove(pieces, curPiece.getIndex(), j)) {
                         curPieceMoves.add(j);//add move
                     }
                 }
@@ -432,9 +432,8 @@ public class GameActivity extends AppCompatActivity {
             //move piece like normal
             int start = Integer.parseInt(args[0]);
             int end = Integer.parseInt(args[1]);
-            Piece p = pieces[start];
-            p.isMoveValid(end, pieces);//important,unfortunately
-            p.move(end, pieces);
+
+            pieces[start].move(end, pieces);
             //pawn promotion
             if (args.length == 3) {
                 String type = args[2];
