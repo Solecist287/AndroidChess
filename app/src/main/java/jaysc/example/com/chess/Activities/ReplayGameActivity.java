@@ -9,7 +9,7 @@ import android.widget.GridView;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-import jaysc.example.com.chess.Adapters.ImageAdapter;
+import jaysc.example.com.chess.Adapters.ChessboardAdapter;
 import jaysc.example.com.chess.R;
 import jaysc.example.com.chess.Pieces.*;
 
@@ -17,7 +17,7 @@ public class ReplayGameActivity extends AppCompatActivity {
     public static final String MOVES = "moves";
     public ArrayList<String>moves;
     public Piece [] pieces;
-    public ImageAdapter chessboardAdapter;
+    public ChessboardAdapter chessboardAdapter;
     public int moveIndex;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +35,7 @@ public class ReplayGameActivity extends AppCompatActivity {
         pieces = new Piece[64];
         resetBoard();
         //create adapter to connect to pieces' images/chessboard positions
-        chessboardAdapter = new ImageAdapter(this, pieces);
+        chessboardAdapter = new ChessboardAdapter(this, pieces);
         //fetch gridview from xml variable name
         GridView gridview = (GridView) findViewById(R.id.chessboard_replay);
         //connect gridview to its adapter

@@ -12,12 +12,12 @@ import jaysc.example.com.chess.Pieces.*;
 import jaysc.example.com.chess.R;
 
 
-public class ImageAdapter extends BaseAdapter {
+public class ChessboardAdapter extends BaseAdapter {
     public int selectedPieceIndex = -1;
     private Context mContext;
     private Piece[] pieces;
     private TypedArray pieceImgs;
-    public ImageAdapter(Context c, Piece[] pieces) {
+    public ChessboardAdapter(Context c, Piece[] pieces) {
         mContext = c;
         this.pieces = pieces;
         pieceImgs = mContext.getResources().obtainTypedArray(R.array.piece_imgs);

@@ -20,7 +20,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-import jaysc.example.com.chess.Adapters.ImageAdapter;
+import jaysc.example.com.chess.Adapters.ChessboardAdapter;
 import jaysc.example.com.chess.R;
 import jaysc.example.com.chess.Pieces.*;
 
@@ -31,7 +31,7 @@ public class GameActivity extends AppCompatActivity {
     public static int turnCount;
     public ArrayList<String> moves;
     public Piece[] pieces;
-    public ImageAdapter chessboardAdapter;
+    public ChessboardAdapter chessboardAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,7 @@ public class GameActivity extends AppCompatActivity {
         //puts pieces in original spot
         resetBoard(pieces);
         //create adapter to connect to pieces' images/chessboard positions
-        chessboardAdapter = new ImageAdapter(this, pieces);
+        chessboardAdapter = new ChessboardAdapter(this, pieces);
         //fetch gridview from xml variable name
         chessboardAdapter.selectedPieceIndex = -1;
         GridView gridview = findViewById(R.id.chessboard);
@@ -65,7 +65,7 @@ public class GameActivity extends AppCompatActivity {
                     Piece selectedPiece = pieces[chessboardAdapter.selectedPieceIndex];
 
                     if (selectedPiece.isMoveValid(position, pieces)
-                            && !checkAfterMove(duplicateBoard(pieces), selectedPiece.getIndex(), position)) {//MOVE IS VALID
+                            && !checkAfterMove(pieces, selectedPiece.getIndex(), position)) {//MOVE IS VALID
                         //add move to list
                         moves.add(selectedPiece.getIndex() + "," + position);
                         //move piece
@@ -124,20 +124,14 @@ public class GameActivity extends AppCompatActivity {
     private void concludeTurn() {
         toggleTurn();
         //only reset drawrequest if it was not done on this turn
-        if (drawRequest != turnCount) {
-            drawRequest = -1;
-        }
+        if (drawRequest != turnCount) {drawRequest = -1;}
         turnCount++;
         chessboardAdapter.notifyDataSetChanged();
         evaluateTurn();
     }
 
     private void toggleTurn() {
-        if (turn == 'w') {
-            turn = 'b';
-        } else {
-            turn = 'w';
-        }
+        if (turn == 'w') turn = 'b'; else turn = 'w';
     }
 
     private void evaluateTurn() {
@@ -305,8 +299,6 @@ public class GameActivity extends AppCompatActivity {
                 }
                 //return to main menu
                 finish();
-
-                //otherwise returns to game screen
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -462,13 +454,7 @@ public class GameActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MenuActivity.class);
             startActivity(intent);
         } else {
-            String popupMessage = "";
-            if (turn == 'w') {
-                popupMessage = "Black wins";
-            } else {
-                popupMessage = "White wins";
-            }
-            showSavePopup(popupMessage);
+            if (turn == 'w') showSavePopup("Black wins"); else showSavePopup("White wins");
         }
     }
 }
