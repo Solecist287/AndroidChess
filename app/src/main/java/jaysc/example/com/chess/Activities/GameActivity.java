@@ -36,8 +36,11 @@ public class GameActivity extends AppCompatActivity {
     private King whiteKing;
     private King blackKing;
 
-    public ChessboardAdapter chessboardAdapter;
+    private ChessboardAdapter chessboardAdapter;
 
+    private static String[] promotionLevels = {"Queen", "Rook", "Bishop", "Knight"};//used for pawn promotion display
+    private static String[] promotionChars = {"Q","R","B","N"};//used for writing promotions to move list
+     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -255,7 +258,6 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void showPawnPopup(final int selectedPieceIndex, final char owner) {
-        String[] promotionLevels = {"Queen", "Rook", "Bishop", "Knight"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Promote Pawn...");
         builder.setItems(promotionLevels, new DialogInterface.OnClickListener() {
@@ -265,18 +267,15 @@ public class GameActivity extends AppCompatActivity {
                 String entry = moves.get(moves.size() - 1);//get current move string
                 if (which == 0) {//Queen
                     pieces[selectedPieceIndex] = new Queen(selectedPieceIndex, owner);
-                    entry += ",Q";
                 } else if (which == 1) {//Rook
                     pieces[selectedPieceIndex] = new Rook(selectedPieceIndex, owner);
-                    entry += ",R";
                 } else if (which == 2) {//Bishop
                     pieces[selectedPieceIndex] = new Bishop(selectedPieceIndex, owner);
-                    entry += ",B";
                 } else if (which == 3) {//Knight
                     pieces[selectedPieceIndex] = new Knight(selectedPieceIndex, owner);
-                    //add move to list
-                    entry += ",N";
                 }
+                //add move to list
+                entry+=","+promotionChars[which].charAt(0);
                 moves.set(moves.size() - 1, entry);
                 chessboardAdapter.notifyDataSetChanged();
             }
@@ -364,30 +363,22 @@ public class GameActivity extends AppCompatActivity {
         moves.add(randomPiece.getIndex() + "," + randomDest);
         //move piece
         randomPiece.move(randomDest,pieces);
-
         //if pawn promotion is being done, choose random promotion
         if (randomPiece instanceof Pawn && (randomPiece.getIndex() < 8 || randomPiece.getIndex() > 55)) {
             //pawn promotion
-            String levels[] = {"Queen", "Rook", "Bishop", "Knight"};
-            int randomLevel = (int) (Math.random() * (levels.length));
+            int randomLevel = (int) (Math.random() * (promotionLevels.length));
             String entry = moves.get(moves.size() - 1);//get current move string
             if (randomLevel == 0) {//queen
                 pieces[randomDest] = new Queen(randomDest, turn);
-                //add move to list
-                entry+=",Q";
             } else if (randomLevel == 1) {//rook
                 pieces[randomDest] = new Rook(randomDest, turn);
-                //add move to list
-                entry+=",R";
             } else if (randomLevel == 2) {//bishop
                 pieces[randomDest] = new Bishop(randomDest, turn);
-                //add move to list
-                entry+=",B";
             } else if (randomLevel == 3) {//knight
                 pieces[randomDest] = new Knight(randomDest, turn);
-                //add move to list
-                entry+=",N";
             }
+            //add move to list
+            entry+=","+promotionChars[randomLevel].charAt(0);
             moves.set(moves.size() - 1, entry);
         }
         //change turn, redraw chessboard, evaluate if next guy is screwed
