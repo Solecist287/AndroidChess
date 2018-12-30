@@ -41,8 +41,8 @@ public class ChessboardAdapter extends BaseAdapter {
         if (convertView == null) {
             // if it's not recycled, initialize some attributes
             imageView = new ImageView(mContext);
-            imageView.setLayoutParams(new ViewGroup.LayoutParams(90, 90));
-            imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            imageView.setLayoutParams(new ViewGroup.LayoutParams(90,90));
+            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             imageView.setPadding(8, 8, 8, 8);
             //choose black or white for square
             int row = position/8;
@@ -71,4 +71,3 @@ public class ChessboardAdapter extends BaseAdapter {
         return imageView;
     }
 }
-
