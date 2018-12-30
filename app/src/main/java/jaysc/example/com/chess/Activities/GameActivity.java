@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 import jaysc.example.com.chess.Adapters.ChessboardAdapter;
@@ -344,41 +345,26 @@ public class GameActivity extends AppCompatActivity {
 
     //AI button: make random move and conclude turn
     public void aiMove(View view) {
-        //choose random valid move and do it
-        //this is a list of possible pieces
-        ArrayList<Piece> possiblePieces = new ArrayList<>();
-        //this is a list of lists of possible move indices per possible piece
-        ArrayList<ArrayList<Integer>> allPossiblemoves = new ArrayList<>();
-        //get list of possible pieces
-        for (int i = 0; i < 64; i++) {
+        //array of pairs(piece index and destination index)
+        ArrayList <ArrayList<Integer>> generatedMoves = new ArrayList<>();
+        for (int i = 0; i < 64; i++){
             Piece curPiece = pieces[i];
-            //curpiece must be owned by AI
-            if (curPiece != null && curPiece.getOwner() == turn) {
-                ArrayList<Integer> curPieceMoves = new ArrayList<>();
-                //get list of possible moves
-                for (int j = 0; j < 64; j++) {
-                    //if can move and does not result in check for AI (assumed that there are possible moves already)
-                    if (curPiece.isMoveValid(j, pieces) && !checkAfterMove(pieces, curPiece.getIndex(), j)) {
-                        curPieceMoves.add(j);//add move
+            if (curPiece!=null && curPiece.getOwner() == turn){
+                for (int j = 0; j < 64; j++){
+                    if (curPiece.isMoveValid(j,pieces) && !checkAfterMove(pieces,i,j)){
+                        generatedMoves.add(new ArrayList<Integer>(Arrays.asList(i,j)));
                     }
-                }
-                //there are possible moves for current piece
-                if (curPieceMoves.size() > 0) {
-                    possiblePieces.add(curPiece);
-                    allPossiblemoves.add(curPieceMoves);
                 }
             }
         }
-        //assumed that there must be some element in possiblepieces since it is already
-        //checked that there are possible moves that don't put AI in check
-        int randomPieceIndex = (int) (Math.random() * (possiblePieces.size()));
-        int randomMoveIndex = (int) (Math.random() * (allPossiblemoves.get(randomPieceIndex).size()));
-        int randomDest = allPossiblemoves.get(randomPieceIndex).get(randomMoveIndex);
-        Piece randomPiece = possiblePieces.get(randomPieceIndex);
-        //add move to list
+        int randomMoveIndex = (int)(Math.random()*generatedMoves.size());
+        Piece randomPiece = pieces[generatedMoves.get(randomMoveIndex).get(0)];
+        int randomDest = generatedMoves.get(randomMoveIndex).get(1);
+        //update move list
         moves.add(randomPiece.getIndex() + "," + randomDest);
         //move piece
-        randomPiece.move(randomDest, pieces);
+        randomPiece.move(randomDest,pieces);
+
         //if pawn promotion is being done, choose random promotion
         if (randomPiece instanceof Pawn && (randomPiece.getIndex() < 8 || randomPiece.getIndex() > 55)) {
             //pawn promotion
