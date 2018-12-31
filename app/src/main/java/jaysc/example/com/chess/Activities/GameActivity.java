@@ -19,7 +19,11 @@ import java.io.OutputStreamWriter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 
 import jaysc.example.com.chess.Adapters.ChessboardAdapter;
 import jaysc.example.com.chess.R;
@@ -37,12 +41,15 @@ public class GameActivity extends AppCompatActivity {
     private King blackKing;
     private ChessboardAdapter chessboardAdapter;
     private static String[] promotionLevels = {"(Q) Queen", "(R) Rook", "(B) Bishop", "(N) Knight"};//used for pawn promotion display
-
+    private final static List<BiFunction<Integer,Character,Piece>> promotionConstructors = Arrays.asList(
+            Queen::new,
+            Rook::new,
+            Bishop::new,
+            Knight::new);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-        //if there is no saved state, then initialize like normal start of game
         turn = 'w';
         drawRequest = -1;
         undo = -1;//arbitrary val
@@ -261,17 +268,9 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // the user clicked on promotionLevels[which]
-                String entry = moves.get(moves.size() - 1);//get current move string
-                if (which == 0) {//Queen
-                    pieces[selectedPieceIndex] = new Queen(selectedPieceIndex, owner);
-                } else if (which == 1) {//Rook
-                    pieces[selectedPieceIndex] = new Rook(selectedPieceIndex, owner);
-                } else if (which == 2) {//Bishop
-                    pieces[selectedPieceIndex] = new Bishop(selectedPieceIndex, owner);
-                } else if (which == 3) {//Knight
-                    pieces[selectedPieceIndex] = new Knight(selectedPieceIndex, owner);
-                }
+                pieces[selectedPieceIndex] = promotionConstructors.get(which).apply(selectedPieceIndex,owner);
                 //add move to list
+                String entry = moves.get(moves.size() - 1);//get current move string
                 entry+=","+promotionLevels[which].charAt(1);
                 moves.set(moves.size() - 1, entry);
                 chessboardAdapter.notifyDataSetChanged();
@@ -364,17 +363,9 @@ public class GameActivity extends AppCompatActivity {
         if (randomPiece instanceof Pawn && (randomPiece.getIndex() < 8 || randomPiece.getIndex() > 55)) {
             //pawn promotion
             int randomLevel = (int) (Math.random() * (promotionLevels.length));
-            String entry = moves.get(moves.size() - 1);//get current move string
-            if (randomLevel == 0) {//queen
-                pieces[randomDest] = new Queen(randomDest, turn);
-            } else if (randomLevel == 1) {//rook
-                pieces[randomDest] = new Rook(randomDest, turn);
-            } else if (randomLevel == 2) {//bishop
-                pieces[randomDest] = new Bishop(randomDest, turn);
-            } else if (randomLevel == 3) {//knight
-                pieces[randomDest] = new Knight(randomDest, turn);
-            }
+            pieces[randomDest] = promotionConstructors.get(randomLevel).apply(randomDest,turn);
             //add move to list
+            String entry = moves.get(moves.size() - 1);//get current move string
             entry+=","+promotionLevels[randomLevel].charAt(1);
             moves.set(moves.size() - 1, entry);
         }
@@ -410,16 +401,13 @@ public class GameActivity extends AppCompatActivity {
             pieces[start].move(end, pieces);
             //pawn promotion
             if (args.length == 3) {
-                String type = args[2];
-                if (type.equals("Q")) {
-                    pieces[end] = new Queen(end, turn);
-                } else if (type.equals("R")) {
-                    pieces[end] = new Rook(end, turn);
-                } else if (type.equals("B")) {
-                    pieces[end] = new Bishop(end, turn);
-                } else if (type.equals("N")) {
-                    pieces[end] = new Knight(end, turn);
-                }
+                char type = args[2].charAt(0);
+                char owner = (i%2==0) ? 'w' : 'b';
+                int constrIndex = IntStream.range(0,promotionLevels.length)
+                        .filter(k->type == promotionLevels[k].charAt(1))
+                        .limit(1)
+                        .sum();
+                pieces[end] = promotionConstructors.get(constrIndex).apply(end,owner);
             }
         }
         chessboardAdapter.notifyDataSetChanged();
