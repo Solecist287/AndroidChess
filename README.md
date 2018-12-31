@@ -7,7 +7,7 @@ git clone https://github.com/Solecist287/AndroidChess.git
 ```
 When running, use the Nexus 4 since it currently only supports that phone size.
 ## Tools Used
-* Java
+* Java 8
 * Android Studio
 ## Features
 * Basic moves
