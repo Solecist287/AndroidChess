@@ -34,4 +34,8 @@ public class Rook extends Piece{
     public int getImageIndex(){
         if (owner == 'b') return 10; else return 11;
     }
+    @Override
+    public Piece makeCopy() {
+        return new Rook(this);
+    }
 }

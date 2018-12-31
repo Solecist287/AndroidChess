@@ -87,4 +87,7 @@ public class King extends Piece{
     public int getImageIndex(){
         if (owner == 'b') return 2; else return 3;
     }
+    public Piece makeCopy() {
+        return new King(this);
+    }
 }

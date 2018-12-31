@@ -25,6 +25,7 @@ public abstract class Piece{
     //funcs
     public abstract boolean isMoveValid(int destIndex, Piece[]board);//knows if a piece is in destination coord
     public abstract int getImageIndex();
+    public abstract Piece makeCopy();
     public void move(int destIndex, Piece[]board) {
         //clear piece's prev location
         board[index] = null;
@@ -43,7 +44,5 @@ public abstract class Piece{
     public int getRow() {return row;}
     public char getOwner() {return owner;}
     public int getMoves() {return moves;}
-    //might wanna change this for saving state?
-   //should make abstract and not need type variable
-    // public String toString(){return ""+owner + type;}
+
 }

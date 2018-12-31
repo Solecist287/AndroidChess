@@ -242,20 +242,8 @@ public class GameActivity extends AppCompatActivity {
         //THIS MAKES A SEPARATE CHESSBOARD
         final Piece[] result = new Piece[64];
         for (int i = 0; i < 64; i++) {
-            if (p[i] == null) {
-                result[i] = null;
-            } else if (p[i] instanceof Pawn) {
-                result[i] = new Pawn((Pawn) (p[i]));
-            } else if (p[i] instanceof Rook) {
-                result[i] = new Rook((Rook) (p[i]));
-            } else if (p[i] instanceof Knight) {
-                result[i] = new Knight((Knight) (p[i]));
-            } else if (p[i] instanceof Bishop) {
-                result[i] = new Bishop((Bishop) (p[i]));
-            } else if (p[i] instanceof Queen) {
-                result[i] = new Queen((Queen) (p[i]));
-            } else if (p[i] instanceof King) {
-                result[i] = new King((King) (p[i]));
+            if (p[i] != null) {
+                result[i] = p[i].makeCopy();
             }
         }
         return result;
@@ -376,12 +364,8 @@ public class GameActivity extends AppCompatActivity {
     //undo button: undo last move. does not allow second chance to draw
     public void undoMove(View view) {
         //case: first move ever
-        if (turnCount == 0 || undo == turnCount) {
-            return;
-        }
-        //change turn
+        if (turnCount == 0 || undo == turnCount) {return;}
         toggleTurn();
-        //update turncount
         turnCount--;
         chessboardAdapter.selectedPieceIndex = -1;
         drawRequest = -1;

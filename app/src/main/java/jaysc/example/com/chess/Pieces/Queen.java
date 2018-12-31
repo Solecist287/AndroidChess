@@ -13,4 +13,7 @@ public class Queen extends Piece{
     public int getImageIndex(){
         if (owner == 'b') return 8; else return 9;
     }
+    public Piece makeCopy() {
+        return new Queen(this);
+    }
 }

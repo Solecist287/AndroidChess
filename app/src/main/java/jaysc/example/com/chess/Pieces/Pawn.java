@@ -70,4 +70,7 @@ public class Pawn extends Piece{
     public int getImageIndex(){
         if (owner == 'b') return 6; else return 7;
     }
+    public Piece makeCopy() {
+        return new Pawn(this);
+    }
 }

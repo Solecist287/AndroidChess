@@ -22,4 +22,7 @@ public class Knight extends Piece{
     public int getImageIndex(){
         if (owner == 'b') return 4; else return 5;
     }
+    public Piece makeCopy() {
+        return new Knight(this);
+    }
 }

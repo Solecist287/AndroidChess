@@ -57,4 +57,7 @@ public class Bishop extends Piece{
     public int getImageIndex(){
         if (owner == 'b') return 0; else return 1;
     }
+    public Piece makeCopy() {
+        return new Bishop(this);
+    }
 }
