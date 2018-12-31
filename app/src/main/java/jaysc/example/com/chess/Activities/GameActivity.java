@@ -35,12 +35,9 @@ public class GameActivity extends AppCompatActivity {
     private King currentKing;
     private King whiteKing;
     private King blackKing;
-
     private ChessboardAdapter chessboardAdapter;
+    private static String[] promotionLevels = {"(Q) Queen", "(R) Rook", "(B) Bishop", "(N) Knight"};//used for pawn promotion display
 
-    private static String[] promotionLevels = {"Queen", "Rook", "Bishop", "Knight"};//used for pawn promotion display
-    private static String[] promotionChars = {"Q","R","B","N"};//used for writing promotions to move list
-     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -275,7 +272,7 @@ public class GameActivity extends AppCompatActivity {
                     pieces[selectedPieceIndex] = new Knight(selectedPieceIndex, owner);
                 }
                 //add move to list
-                entry+=","+promotionChars[which].charAt(0);
+                entry+=","+promotionLevels[which].charAt(1);
                 moves.set(moves.size() - 1, entry);
                 chessboardAdapter.notifyDataSetChanged();
             }
@@ -378,7 +375,7 @@ public class GameActivity extends AppCompatActivity {
                 pieces[randomDest] = new Knight(randomDest, turn);
             }
             //add move to list
-            entry+=","+promotionChars[randomLevel].charAt(0);
+            entry+=","+promotionLevels[randomLevel].charAt(1);
             moves.set(moves.size() - 1, entry);
         }
         //change turn, redraw chessboard, evaluate if next guy is screwed
