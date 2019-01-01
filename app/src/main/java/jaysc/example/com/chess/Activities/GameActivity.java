@@ -2,13 +2,11 @@ package jaysc.example.com.chess.Activities;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.Toast;
@@ -21,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
@@ -66,34 +63,32 @@ public class GameActivity extends AppCompatActivity {
         GridView gridview = findViewById(R.id.chessboard);
         //connect gridview to its adapter
         gridview.setAdapter(chessboardAdapter);
-        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                //add piece to selected var?
-                if (pieces[position] != null && pieces[position].getOwner() == turn) {
-                    //setting selectedpiece only if it is owned by player
-                    chessboardAdapter.selectedPieceIndex = position;
-                } else if (chessboardAdapter.selectedPieceIndex != -1) {
-                    //entertains move if there is a selectedpiece and clicked destination
-                    Piece selectedPiece = pieces[chessboardAdapter.selectedPieceIndex];
+        gridview.setOnItemClickListener((parent, v, position, id) -> {
+            //add piece to selected var?
+            if (pieces[position] != null && pieces[position].getOwner() == turn) {
+                //setting selectedpiece only if it is owned by player
+                chessboardAdapter.selectedPieceIndex = position;
+            } else if (chessboardAdapter.selectedPieceIndex != -1) {
+                //entertains move if there is a selectedpiece and clicked destination
+                Piece selectedPiece = pieces[chessboardAdapter.selectedPieceIndex];
 
-                    if (selectedPiece.isMoveValid(position, pieces)
-                            && !checkAfterMove(pieces, selectedPiece.getIndex(), position)) {//MOVE IS VALID
-                        //add move to list
-                        moves.add(selectedPiece.getIndex() + "," + position);
-                        //move piece
-                        selectedPiece.move(position, pieces);
-                        if (selectedPiece instanceof Pawn && (selectedPiece.getIndex() < 8 || selectedPiece.getIndex() > 55)) {
-                            //pawn promotion
-                            showPawnPopup(selectedPiece.getIndex(), turn);
-                        }
-                        //end turn
-                        concludeTurn();
+                if (selectedPiece.isMoveValid(position, pieces)
+                        && !checkAfterMove(pieces, selectedPiece.getIndex(), position)) {//MOVE IS VALID
+                    //add move to list
+                    moves.add(selectedPiece.getIndex() + "," + position);
+                    //move piece
+                    selectedPiece.move(position, pieces);
+                    if (selectedPiece instanceof Pawn && (selectedPiece.getIndex() < 8 || selectedPiece.getIndex() > 55)) {
+                        //pawn promotion
+                        showPawnPopup(selectedPiece.getIndex(), turn);
                     }
-                    //clear selectedpieceindex
-                    chessboardAdapter.selectedPieceIndex = -1;
+                    //end turn
+                    concludeTurn();
                 }
-                chessboardAdapter.notifyDataSetChanged();
+                //clear selectedpieceindex
+                chessboardAdapter.selectedPieceIndex = -1;
             }
+            chessboardAdapter.notifyDataSetChanged();
         });
         //initial currentKing
         currentKing = whiteKing;
@@ -252,17 +247,14 @@ public class GameActivity extends AppCompatActivity {
     private void showPawnPopup(final int selectedPieceIndex, final char owner) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Promote Pawn...");
-        builder.setItems(promotionLevels, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // the user clicked on promotionLevels[which]
-                pieces[selectedPieceIndex] = promotionConstructors.get(which).apply(selectedPieceIndex,owner);
-                //add move to list
-                String entry = moves.get(moves.size() - 1);//get current move string
-                entry+=","+promotionLevels[which].charAt(1);
-                moves.set(moves.size() - 1, entry);
-                chessboardAdapter.notifyDataSetChanged();
-            }
+        builder.setItems(promotionLevels, (dialog, which) -> {
+            // the user clicked on promotionLevels[which]
+            pieces[selectedPieceIndex] = promotionConstructors.get(which).apply(selectedPieceIndex,owner);
+            //add move to list
+            String entry = moves.get(moves.size() - 1);//get current move string
+            entry+=","+promotionLevels[which].charAt(1);
+            moves.set(moves.size() - 1, entry);
+            chessboardAdapter.notifyDataSetChanged();
         });
         builder.show();
     }
@@ -276,26 +268,20 @@ public class GameActivity extends AppCompatActivity {
         input.setHint("Enter name for game");
         builder.setView(input);
         //button handlers
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // if EditText is empty disable closing on possitive button
-                if (!(input.getText().toString().trim().isEmpty())) {//do something if edittext not empty
-                    String name = input.getText().toString();//set name
-                    //write file to disk
-                    writeToFile(name);
-                }
-                //return to main menu
-                finish();
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            // if EditText is empty disable closing on possitive button
+            if (!(input.getText().toString().trim().isEmpty())) {//do something if edittext not empty
+                String name = input.getText().toString();//set name
+                //write file to disk
+                writeToFile(name);
             }
+            //return to main menu
+            finish();
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //return to main menu
-                finish();
-                dialog.cancel();
-            }
+        builder.setNegativeButton("Cancel", (dialog, which) -> {
+            //return to main menu
+            finish();
+            dialog.cancel();
         });
         builder.show();
     }
@@ -335,7 +321,7 @@ public class GameActivity extends AppCompatActivity {
             if (curPiece!=null && curPiece.getOwner() == turn){
                 for (int j = 0; j < 64; j++){
                     if (curPiece.isMoveValid(j,pieces) && !checkAfterMove(pieces,i,j)){
-                        generatedMoves.add(new ArrayList<Integer>(Arrays.asList(i,j)));
+                        generatedMoves.add(new ArrayList<>(Arrays.asList(i,j)));
                     }
                 }
             }
