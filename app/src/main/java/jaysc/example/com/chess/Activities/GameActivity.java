@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.Toast;
 
-
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.time.LocalDate;
@@ -210,11 +209,8 @@ public class GameActivity extends AppCompatActivity {
             if (curPiece != null && curPiece.getOwner() == turn) {
                 for (int j = 0; j < 64; j++) {
                     //current piece is able to move somewhere
-                    if (curPiece.isMoveValid(j, pieces)) {
-                        //check if move takes king out of check
-                        if (!checkAfterMove(pieces, i, j)) {
-                            return false;
-                        }
+                    if (curPiece.isMoveValid(j, pieces) && !checkAfterMove(pieces, i, j)) {
+                        return false;
                     }
                 }
             }
@@ -275,13 +271,11 @@ public class GameActivity extends AppCompatActivity {
                 //write file to disk
                 writeToFile(name);
             }
-            //return to main menu
-            finish();
+            returnToMainMenu();
         });
         builder.setNegativeButton("Cancel", (dialog, which) -> {
-            //return to main menu
-            finish();
             dialog.cancel();
+            returnToMainMenu();
         });
         builder.show();
     }
@@ -391,5 +385,11 @@ public class GameActivity extends AppCompatActivity {
         } else {
             if (turn == 'w') showSavePopup("Black wins"); else showSavePopup("White wins");
         }
+    }
+
+    private void returnToMainMenu(){
+        Intent intent = new Intent(this, MenuActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
