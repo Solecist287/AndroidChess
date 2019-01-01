@@ -31,6 +31,7 @@ public class GameActivity extends AppCompatActivity {
     private int undo;
     public static int turnCount;
     private ArrayList<String> moves;
+    private Piece[] lastBoard;//"snapshot" of last move's chessboard
     private Piece[] pieces;
     private King currentKing;
     private King whiteKing;
@@ -42,6 +43,7 @@ public class GameActivity extends AppCompatActivity {
             Rook::new,
             Bishop::new,
             Knight::new);
+    GridView gridview;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +53,7 @@ public class GameActivity extends AppCompatActivity {
         undo = -1;//arbitrary val
         turnCount = 0;
         moves = new ArrayList<>();
+        lastBoard = null;
         //create piece array to hold pieces
         pieces = new Piece[64];
         //puts pieces in original spot
@@ -59,7 +62,7 @@ public class GameActivity extends AppCompatActivity {
         chessboardAdapter = new ChessboardAdapter(this, pieces);
         //fetch gridview from xml variable name
         chessboardAdapter.selectedPieceIndex = -1;
-        GridView gridview = findViewById(R.id.chessboard);
+        gridview = findViewById(R.id.chessboard);
         //connect gridview to its adapter
         gridview.setAdapter(chessboardAdapter);
         gridview.setOnItemClickListener((parent, v, position, id) -> {
@@ -73,6 +76,8 @@ public class GameActivity extends AppCompatActivity {
 
                 if (selectedPiece.isMoveValid(position, pieces)
                         && !checkAfterMove(pieces, selectedPiece.getIndex(), position)) {//MOVE IS VALID
+                    //make copy of board
+                    lastBoard = duplicateBoard(pieces);
                     //add move to list
                     moves.add(selectedPiece.getIndex() + "," + position);
                     //move piece
@@ -230,7 +235,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private Piece[] duplicateBoard(Piece[] p) {
-        //THIS MAKES A SEPARATE CHESSBOARD
+        //THIS MAKES A DEEP COPY OF CHESSBOARD
         final Piece[] result = new Piece[64];
         for (int i = 0; i < 64; i++) {
             if (p[i] != null) {
@@ -308,6 +313,8 @@ public class GameActivity extends AppCompatActivity {
 
     //AI button: make random move and conclude turn
     public void aiMove(View view) {
+        //make copy of board
+        lastBoard = duplicateBoard(pieces);
         //array of pairs(piece index and destination index)
         ArrayList <ArrayList<Integer>> generatedMoves = new ArrayList<>();
         for (int i = 0; i < 64; i++){
@@ -354,27 +361,9 @@ public class GameActivity extends AppCompatActivity {
         //pop last move's end and start coord
         moves.remove(moves.size() - 1);
         //update board
-        resetBoard(pieces);
-        for (int i = 0; i < moves.size(); i++) {
-            String curMove = moves.get(i);
-            String args[] = curMove.split(Pattern.quote(","));
-            //move piece like normal
-            int start = Integer.parseInt(args[0]);
-            int end = Integer.parseInt(args[1]);
-
-            pieces[start].move(end, pieces);
-            //pawn promotion
-            if (args.length == 3) {
-                char type = args[2].charAt(0);
-                char owner = (i%2==0) ? 'w' : 'b';
-                int constrIndex = IntStream.range(0,promotionLevels.length)
-                        .filter(k->type == promotionLevels[k].charAt(1))
-                        .limit(1)
-                        .sum();
-                pieces[end] = promotionConstructors.get(constrIndex).apply(end,owner);
-            }
-        }
-        chessboardAdapter.notifyDataSetChanged();
+        pieces = lastBoard;
+        chessboardAdapter = new ChessboardAdapter(this,pieces);
+        gridview.setAdapter(chessboardAdapter);
     }
 
     public void resign(View view) {
