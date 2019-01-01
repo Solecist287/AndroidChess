@@ -25,11 +25,6 @@ public class ReplayGameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_replay_game);
         //retrieve moves
         moves = getIntent().getStringArrayListExtra(MOVES);
-        //String output="";
-        //for (int i = 0; i < moves.size();i++){
-        //   output+=moves.get(i)+"\n";
-        //}
-        //Toast.makeText(ReplayGameActivity.this, output, Toast.LENGTH_LONG).show();
         moveIndex = -1;//start at before first move
         //make room for pieces
         pieces = new Piece[64];
@@ -37,7 +32,7 @@ public class ReplayGameActivity extends AppCompatActivity {
         //create adapter to connect to pieces' images/chessboard positions
         chessboardAdapter = new ChessboardAdapter(this, pieces);
         //fetch gridview from xml variable name
-        GridView gridview = (GridView) findViewById(R.id.chessboard_replay);
+        GridView gridview = findViewById(R.id.chessboard_replay);
         //connect gridview to its adapter
         gridview.setAdapter(chessboardAdapter);
     }
@@ -103,11 +98,7 @@ public class ReplayGameActivity extends AppCompatActivity {
         resetBoard();
         char turn;
         for (int i = 0; i <= moveIndex; i++){
-            if (i%2==0){
-                turn = 'w';
-            }else{
-                turn = 'b';
-            }
+            turn = (i%2==0)? 'w': 'b';
             String curMove = moves.get(i);
             String args[] = curMove.split(Pattern.quote(","));
             //move piece like normal
@@ -117,16 +108,8 @@ public class ReplayGameActivity extends AppCompatActivity {
             p.move(end,pieces);
             //pawn promotion
             if (args.length == 3){
-                String type = args[2];
-                if (type.equals("Q")){
-                    pieces[end] = new Queen(end,turn);
-                }else if (type.equals("R")){
-                    pieces[end] = new Rook(end,turn);
-                }else if (type.equals("B")){
-                    pieces[end] = new Bishop(end,turn);
-                }else if (type.equals("N")){
-                    pieces[end] = new Knight(end,turn);
-                }
+                int index = Integer.parseInt(args[2]);
+                pieces[end] = GameActivity.promotionConstructors.get(index).apply(end,turn);
             }
         }
         chessboardAdapter.notifyDataSetChanged();

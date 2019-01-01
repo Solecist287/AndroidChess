@@ -19,13 +19,11 @@ public class MenuActivity extends AppCompatActivity {
     public void launchGameScreen(View view) {
         Intent intent = new Intent(this, GameActivity.class);
         startActivity(intent);
-        finish();
     }
 
     public void launchRecordedGamesScreen(View view) {
         Intent intent = new Intent(this, RecordedGamesActivity.class);
         startActivity(intent);
-        finish();
     }
 }
 

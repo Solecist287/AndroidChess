@@ -24,24 +24,25 @@ import jaysc.example.com.chess.R;
 import jaysc.example.com.chess.Pieces.*;
 
 public class GameActivity extends AppCompatActivity {
-    private char turn;
-    private int drawRequest;
-    private int undo;
+    private char turn;//white('w') or black('b') player
+    private int drawRequest;//keeps track of which turn wants to draw
+    private int undo;//keeps track of which turn wants to undo
     public static int turnCount;
-    private ArrayList<String> moves;
+    public final static List<BiFunction<Integer,Character,Piece>> promotionConstructors = Arrays.asList(
+            Queen::new,
+            Rook::new,
+            Bishop::new,
+            Knight::new);//constructors for pawn promotions
+    private final static String[] promotionLevels = {"(Q) Queen", "(R) Rook", "(B) Bishop", "(N) Knight"};//used for pawn promotion display
+
+    private List<String> moves;//list of strings: "start,end(,promotion)"
     private Piece[] lastBoard;//"snapshot" of last move's chessboard
-    private Piece[] pieces;
+    private Piece[] pieces;//main chessboard
     private King currentKing;
     private King whiteKing;
     private King blackKing;
     private ChessboardAdapter chessboardAdapter;
-    private static String[] promotionLevels = {"(Q) Queen", "(R) Rook", "(B) Bishop", "(N) Knight"};//used for pawn promotion display
-    private final static List<BiFunction<Integer,Character,Piece>> promotionConstructors = Arrays.asList(
-            Queen::new,
-            Rook::new,
-            Bishop::new,
-            Knight::new);
-    GridView gridview;
+    private GridView gridview;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -251,7 +252,7 @@ public class GameActivity extends AppCompatActivity {
             pieces[selectedPieceIndex] = promotionConstructors.get(which).apply(selectedPieceIndex,owner);
             //add move to list
             String entry = moves.get(moves.size() - 1);//get current move string
-            entry+=","+promotionLevels[which].charAt(1);
+            entry+=","+which;
             moves.set(moves.size() - 1, entry);
             chessboardAdapter.notifyDataSetChanged();
         });
@@ -314,7 +315,7 @@ public class GameActivity extends AppCompatActivity {
         //make copy of board
         lastBoard = duplicateBoard(pieces);
         //array of pairs(piece index and destination index)
-        ArrayList <ArrayList<Integer>> generatedMoves = new ArrayList<>();
+        List <List<Integer>> generatedMoves = new ArrayList<>();
         for (int i = 0; i < 64; i++){
             Piece curPiece = pieces[i];
             if (curPiece!=null && curPiece.getOwner() == turn){
@@ -339,7 +340,7 @@ public class GameActivity extends AppCompatActivity {
             pieces[randomDest] = promotionConstructors.get(randomLevel).apply(randomDest,turn);
             //add move to list
             String entry = moves.get(moves.size() - 1);//get current move string
-            entry+=","+promotionLevels[randomLevel].charAt(1);
+            entry+="," + randomLevel;
             moves.set(moves.size() - 1, entry);
         }
         //change turn, redraw chessboard, evaluate if next guy is screwed
@@ -377,6 +378,5 @@ public class GameActivity extends AppCompatActivity {
     private void returnToMainMenu(){
         Intent intent = new Intent(this, MenuActivity.class);
         startActivity(intent);
-        finish();
     }
 }

@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 import jaysc.example.com.chess.Structures.Game;
 import jaysc.example.com.chess.R;
@@ -24,18 +25,17 @@ import jaysc.example.com.chess.R;
 public class RecordedGamesActivity extends AppCompatActivity {
     public static final String PATH = "games.txt";
     public static final String DIVIDER = "******";
-    public static final String [] choices= {"Name","Date"};
-    ArrayList<Game>games;
+    List<Game> games;
     ArrayAdapter<Game>gameAdapter;
     Spinner dropDown;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recorded_games);
-        games = new ArrayList<Game>();
+        games = new ArrayList<>();
         readFromFile();
         //initialize spinner choice to name
-        dropDown = (Spinner)findViewById(R.id.dropDown);
+        dropDown = findViewById(R.id.dropDown);
         dropDown.setSelection(0);//set to name
         dropDown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -57,23 +57,21 @@ public class RecordedGamesActivity extends AppCompatActivity {
         //sort by name initially
         games.sort(new NameComparator());
         //hook up adapter to games arraylist
-        gameAdapter = new ArrayAdapter<Game>(this,R.layout.activity_recorded_listview,games);
-        ListView gridview = (ListView) findViewById(R.id.gameList);
+        gameAdapter = new ArrayAdapter<>(this,R.layout.activity_recorded_listview,games);
+        ListView gridview = findViewById(R.id.gameList);
         gridview.setAdapter(gameAdapter);
-        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                Game selectedGame = games.get(position);
-                Intent intent = new Intent(getApplicationContext(),ReplayGameActivity.class);
-                intent.putStringArrayListExtra(ReplayGameActivity.MOVES,selectedGame.getMoves());
-                startActivity(intent);
-            }
+        gridview.setOnItemClickListener((parent, v, position, id) -> {
+            Game selectedGame = games.get(position);
+            Intent intent = new Intent(getApplicationContext(),ReplayGameActivity.class);
+            intent.putStringArrayListExtra(ReplayGameActivity.MOVES,selectedGame.getMoves());
+            startActivity(intent);
         });
     }
     private void readFromFile(){
         //READ
         String name = "";
         LocalDate date = null;
-        ArrayList<String>moves = new ArrayList<String>();
+        ArrayList<String>moves = new ArrayList<>();
         try {
             InputStream inputStream = getApplicationContext().openFileInput(RecordedGamesActivity.PATH);
             if ( inputStream != null ) {
@@ -81,7 +79,7 @@ public class RecordedGamesActivity extends AppCompatActivity {
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
                 int i = 0;
                 int lastAsteriskLine = -1;
-                String receiveString = "";
+                String receiveString;
 
                 while ( (receiveString = bufferedReader.readLine()) != null ) {
                     //Toast.makeText(RecordedGamesActivity.this, "read:"+receiveString, Toast.LENGTH_LONG).show();
@@ -92,7 +90,7 @@ public class RecordedGamesActivity extends AppCompatActivity {
                     }else if (receiveString.equals(DIVIDER)){
                         games.add(new Game(name,date,moves));
                         lastAsteriskLine = i;
-                        moves = new ArrayList<String>();
+                        moves = new ArrayList<>();
                     } else {
                         moves.add(receiveString);
                     }
@@ -114,14 +112,12 @@ public class RecordedGamesActivity extends AppCompatActivity {
     //comparators used to sort by their respective category when a
     //category is chosen
     public class NameComparator implements Comparator<Game>{
-
         @Override
         public int compare(Game g1, Game g2) {
             return g1.getName().compareTo(g2.getName());
         }
     }
     public class DateComparator implements Comparator<Game>{
-
         @Override
         public int compare(Game g1, Game g2) {
             return g1.getDate().compareTo(g2.getDate());
