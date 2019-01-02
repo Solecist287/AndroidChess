@@ -31,6 +31,8 @@ public class ReplayGameActivity extends AppCompatActivity {
         moveIndex = -1;//start at before first move
         //make room for pieces
         pieces = initBoard();
+        //fetch gridview from xml variable name
+        gridview = findViewById(R.id.chessboard_replay);
         updateGridview();
     }
     public void launchRecordedGamesScreen(View view) {
@@ -83,8 +85,6 @@ public class ReplayGameActivity extends AppCompatActivity {
     private void updateGridview(){
         //create adapter to connect to pieces' images/chessboard positions
         chessboardAdapter = new ChessboardAdapter(this, pieces);
-        //fetch gridview from xml variable name
-        gridview = findViewById(R.id.chessboard_replay);
         //connect gridview to its adapter
         gridview.setAdapter(chessboardAdapter);
     }
