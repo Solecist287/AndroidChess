@@ -3,9 +3,9 @@ package jaysc.example.com.chess.Pieces;
 
 public abstract class Piece{
 
-    protected int row, column, index;
-    protected char owner; //can be 'w' or 'b' AKA white or black
-    protected int moves;
+    int row, column, index;
+    char owner; //can be 'w' or 'b' AKA white or black
+    int moves;
 
     public Piece(int index, char owner){
         this.index = index;
@@ -40,9 +40,5 @@ public abstract class Piece{
     }
 
     public int getIndex() {return index;}
-    public int getColumn() {return column;}
-    public int getRow() {return row;}
     public char getOwner() {return owner;}
-    public int getMoves() {return moves;}
-
 }

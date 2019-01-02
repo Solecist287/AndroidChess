@@ -74,7 +74,7 @@ public class GameActivity extends AppCompatActivity {
                 Piece selectedPiece = pieces[chessboardAdapter.selectedPieceIndex];
 
                 if (selectedPiece.isMoveValid(position, pieces)
-                        && !checkAfterMove(pieces, selectedPiece.getIndex(), position)) {//MOVE IS VALID
+                        && notCheckAfterMove(pieces, selectedPiece.getIndex(), position)) {//MOVE IS VALID
                     //make copy of board
                     lastBoard = duplicateBoard(pieces);
                     //add move to list
@@ -213,7 +213,7 @@ public class GameActivity extends AppCompatActivity {
             if (curPiece != null && curPiece.getOwner() == turn) {
                 for (int j = 0; j < 64; j++) {
                     //current piece is able to move somewhere
-                    if (curPiece.isMoveValid(j, pieces) && !checkAfterMove(pieces, i, j)) {
+                    if (curPiece.isMoveValid(j, pieces) && notCheckAfterMove(pieces, i, j)) {
                         return false;
                     }
                 }
@@ -222,15 +222,15 @@ public class GameActivity extends AppCompatActivity {
         return true;
     }
 
-    private boolean checkAfterMove(Piece[] board, int startIndex, int endIndex) {
+    private boolean notCheckAfterMove(Piece[] board, int startIndex, int endIndex) {
         Piece[] b = duplicateBoard(board);
         King k = (King)(b[currentKing.getIndex()]);
         //get piece of hypothetical pieces
         Piece chosenPiece = b[startIndex];
         //move this piece
         chosenPiece.move(endIndex, b);
-        //return if king is in check or not
-        return k.inCheck(b);
+        //return if king is in not in check...or not
+        return !k.inCheck(b);
     }
 
     private Piece[] duplicateBoard(Piece[] p) {
@@ -320,7 +320,7 @@ public class GameActivity extends AppCompatActivity {
             Piece curPiece = pieces[i];
             if (curPiece!=null && curPiece.getOwner() == turn){
                 for (int j = 0; j < 64; j++){
-                    if (curPiece.isMoveValid(j,pieces) && !checkAfterMove(pieces,i,j)){
+                    if (curPiece.isMoveValid(j,pieces) && notCheckAfterMove(pieces, i, j)){
                         generatedMoves.add(new ArrayList<>(Arrays.asList(i,j)));
                     }
                 }

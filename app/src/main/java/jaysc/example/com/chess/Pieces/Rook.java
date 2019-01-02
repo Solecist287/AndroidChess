@@ -3,7 +3,7 @@ package jaysc.example.com.chess.Pieces;
 public class Rook extends Piece{
 
     public Rook(int index, char owner){super(index,owner);}
-    public Rook(Rook r) {super(r);}
+    private Rook(Rook r) {super(r);}
 
     public boolean isMoveValid(int destIndex,Piece[]board){//knows if a piece is in destination coord
         int destRow = destIndex/8;
