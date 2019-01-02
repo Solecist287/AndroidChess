@@ -54,9 +54,10 @@ public class GameActivity extends AppCompatActivity {
         moves = new ArrayList<>();
         lastBoard = null;
         //create piece array to hold pieces
-        pieces = new Piece[64];
-        //puts pieces in original spot
-        resetBoard(pieces);
+        pieces = initBoard();
+
+        blackKing = (King)pieces[4];
+        whiteKing = (King)pieces[60];
         //create adapter to connect to pieces' images/chessboard positions
         chessboardAdapter = new ChessboardAdapter(this, pieces);
         //fetch gridview from xml variable name
@@ -99,14 +100,14 @@ public class GameActivity extends AppCompatActivity {
         Toast.makeText(GameActivity.this, "White's turn", Toast.LENGTH_LONG).show();
     }
 
-    private void resetBoard(Piece[] board) {
+    public static Piece[] initBoard() {
+        Piece[] board = new Piece[64];
         //black pieces
         board[0] = new Rook(0, 'b');
         board[1] = new Knight(1, 'b');
         board[2] = new Bishop(2, 'b');
         board[3] = new Queen(3, 'b');
-        blackKing = new King(4, 'b');
-        board[4] = blackKing;
+        board[4] = new King(4, 'b');
         board[5] = new Bishop(5, 'b');
         board[6] = new Knight(6, 'b');
         board[7] = new Rook(7, 'b');
@@ -127,11 +128,11 @@ public class GameActivity extends AppCompatActivity {
         board[57] = new Knight(57, 'w');
         board[58] = new Bishop(58, 'w');
         board[59] = new Queen(59, 'w');
-        whiteKing = new King(60, 'w');
-        board[60] = whiteKing;
+        board[60] = new King(60, 'w');
         board[61] = new Bishop(61, 'w');
         board[62] = new Knight(62, 'w');
         board[63] = new Rook(63, 'w');
+        return board;
     }
 
     //switches turn, redraws chessboard, sees if next player is screwed
