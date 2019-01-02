@@ -5,7 +5,7 @@ Clone this repository into some directory and import it into **Android Studio** 
 ```
 git clone https://github.com/Solecist287/AndroidChess.git
 ```
-When running, use the Nexus 4 since it currently only supports that phone size.
+Only supports Nexus 4 size for now.
 ## Tools Used
 * Java 8
 * Android Studio
@@ -27,6 +27,6 @@ The game can end in a draw if one player sends a draw request, by clicking the *
 ### Choosing a random move for a player's turn
 Clicking the **AI button** chooses a random move for the current player's turn.
 ### Saving a game
-When a game terminates in any fashion, a prompt appears on the screen. The player must enter a **non-empty** name for the recorded game and click the **OK button**.
+When a game terminates in any fashion, a prompt appears on the screen. The player must enter a **non-empty** name for the recorded game and click the **OK button**. After having entered a name for the game, it is saved to an internal text file called "games.txt" which holds all past saved games.
 ### Replaying a game
 Clicking on the **recorded games button** shows the list of previously recorded games. After clicking a game on the list, the user is transported to a screen where they can use **prev move button** and **next move button** to see the recorded moves in action on the chessboard.
