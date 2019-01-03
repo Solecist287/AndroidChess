@@ -36,13 +36,13 @@ public class GameActivity extends AppCompatActivity {
     private final static String[] promotionLevels = {"(Q) Queen", "(R) Rook", "(B) Bishop", "(N) Knight"};//used for pawn promotion display
 
     private List<String> moves;//list of strings: "start,end(,promotion)"
-    private Piece[] lastBoard;//"snapshot" of last move's chessboard
-    private Piece[] pieces;//main chessboard
+    private Piece[] lastChessboard;//"snapshot" of last move's chessboard
+    private Piece[] chessboard;//main chessboard
     private King currentKing;
     private King whiteKing;
     private King blackKing;
     private ChessboardAdapter chessboardAdapter;
-    private GridView gridview;
+    private GridView chessboardView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,36 +52,36 @@ public class GameActivity extends AppCompatActivity {
         undo = -1;//arbitrary val
         turnCount = 0;
         moves = new ArrayList<>();
-        lastBoard = null;
+        lastChessboard = null;
         //create piece array to hold pieces
-        pieces = initBoard();
+        chessboard = initBoard();
 
-        blackKing = (King)pieces[4];
-        whiteKing = (King)pieces[60];
+        blackKing = (King)chessboard[4];
+        whiteKing = (King)chessboard[60];
         //create adapter to connect to pieces' images/chessboard positions
-        chessboardAdapter = new ChessboardAdapter(this, pieces);
+        chessboardAdapter = new ChessboardAdapter(this, chessboard);
         //fetch gridview from xml variable name
         chessboardAdapter.selectedPieceIndex = -1;
-        gridview = findViewById(R.id.chessboard);
+        chessboardView = findViewById(R.id.chessboard);
         //connect gridview to its adapter
-        gridview.setAdapter(chessboardAdapter);
-        gridview.setOnItemClickListener((parent, v, position, id) -> {
+        chessboardView.setAdapter(chessboardAdapter);
+        chessboardView.setOnItemClickListener((parent, v, position, id) -> {
             //add piece to selected var?
-            if (pieces[position] != null && pieces[position].getOwner() == turn) {
+            if (chessboard[position] != null && chessboard[position].getOwner() == turn) {
                 //setting selectedpiece only if it is owned by player
                 chessboardAdapter.selectedPieceIndex = position;
             } else if (chessboardAdapter.selectedPieceIndex != -1) {
                 //entertains move if there is a selectedpiece and clicked destination
-                Piece selectedPiece = pieces[chessboardAdapter.selectedPieceIndex];
+                Piece selectedPiece = chessboard[chessboardAdapter.selectedPieceIndex];
 
-                if (selectedPiece.isMoveValid(position, pieces)
-                        && notCheckAfterMove(pieces, selectedPiece.getIndex(), position)) {//MOVE IS VALID
+                if (selectedPiece.isMoveValid(position, chessboard)
+                        && notCheckAfterMove(chessboard, selectedPiece.getIndex(), position)) {//MOVE IS VALID
                     //make copy of board
-                    lastBoard = duplicateBoard(pieces);
+                    lastChessboard = duplicateBoard(chessboard);
                     //add move to list
                     moves.add(selectedPiece.getIndex() + "," + position);
                     //move piece
-                    selectedPiece.move(position, pieces);
+                    selectedPiece.move(position, chessboard);
                     if (selectedPiece instanceof Pawn && (selectedPiece.getIndex() < 8 || selectedPiece.getIndex() > 55)) {
                         //pawn promotion
                         showPawnPopup(selectedPiece.getIndex(), turn);
@@ -152,7 +152,7 @@ public class GameActivity extends AppCompatActivity {
         if (currentKing == null){return;}
         if (noSafeMoves()) {//stalemate or checkmate for next guy
             String popupMessage = "";
-            if (currentKing.inCheck(pieces)) {//checkmate
+            if (currentKing.inCheck(chessboard)) {//checkmate
                 if (turn == 'w') {
                     //Toast.makeText(GameActivity.this, "Checkmate, Black wins", Toast.LENGTH_LONG).show();
                     popupMessage = "Checkmate, Black wins";
@@ -167,7 +167,7 @@ public class GameActivity extends AppCompatActivity {
             //END GAMMMMEEEEE HEEERRREEE
             showSavePopup(popupMessage);
         } else {//normal move but next guy may be in check...
-            if (currentKing.inCheck(pieces)) {
+            if (currentKing.inCheck(chessboard)) {
                 if (turn == 'w') {
                     if (drawRequest != -1) {//also draw
                         Toast.makeText(GameActivity.this, "White's turn, CHECK, Black offers DRAW", Toast.LENGTH_LONG).show();
@@ -202,12 +202,12 @@ public class GameActivity extends AppCompatActivity {
 
     private boolean noSafeMoves() {
         for (int i = 0; i < 64; i++) {
-            Piece curPiece = pieces[i];
+            Piece curPiece = chessboard[i];
             //if there's a piece that current player owns
             if (curPiece != null && curPiece.getOwner() == turn) {
                 for (int j = 0; j < 64; j++) {
                     //current piece is able to move somewhere
-                    if (curPiece.isMoveValid(j, pieces) && notCheckAfterMove(pieces, i, j)) {
+                    if (curPiece.isMoveValid(j, chessboard) && notCheckAfterMove(chessboard, i, j)) {
                         return false;
                     }
                 }
@@ -243,7 +243,7 @@ public class GameActivity extends AppCompatActivity {
         builder.setTitle("Promote Pawn...");
         builder.setItems(promotionLevels, (dialog, which) -> {
             // the user clicked on promotionLevels[which]
-            pieces[selectedPieceIndex] = promotionConstructors.get(which).apply(selectedPieceIndex,owner);
+            chessboard[selectedPieceIndex] = promotionConstructors.get(which).apply(selectedPieceIndex,owner);
             //add move to list
             String entry = moves.get(moves.size() - 1);//get current move string
             entry+=","+which;
@@ -307,31 +307,31 @@ public class GameActivity extends AppCompatActivity {
     //AI button: make random move and conclude turn
     public void aiMove(View view) {
         //make copy of board
-        lastBoard = duplicateBoard(pieces);
+        lastChessboard = duplicateBoard(chessboard);
         //array of pairs(piece index and destination index)
         List <List<Integer>> generatedMoves = new ArrayList<>();
         for (int i = 0; i < 64; i++){
-            Piece curPiece = pieces[i];
+            Piece curPiece = chessboard[i];
             if (curPiece!=null && curPiece.getOwner() == turn){
                 for (int j = 0; j < 64; j++){
-                    if (curPiece.isMoveValid(j,pieces) && notCheckAfterMove(pieces, i, j)){
+                    if (curPiece.isMoveValid(j,chessboard) && notCheckAfterMove(chessboard, i, j)){
                         generatedMoves.add(new ArrayList<>(Arrays.asList(i,j)));
                     }
                 }
             }
         }
         int randomMoveIndex = (int)(Math.random()*generatedMoves.size());
-        Piece randomPiece = pieces[generatedMoves.get(randomMoveIndex).get(0)];
+        Piece randomPiece = chessboard[generatedMoves.get(randomMoveIndex).get(0)];
         int randomDest = generatedMoves.get(randomMoveIndex).get(1);
         //update move list
         moves.add(randomPiece.getIndex() + "," + randomDest);
         //move piece
-        randomPiece.move(randomDest,pieces);
+        randomPiece.move(randomDest,chessboard);
         //if pawn promotion is being done, choose random promotion
         if (randomPiece instanceof Pawn && (randomPiece.getIndex() < 8 || randomPiece.getIndex() > 55)) {
             //pawn promotion
             int randomLevel = (int) (Math.random() * (promotionLevels.length));
-            pieces[randomDest] = promotionConstructors.get(randomLevel).apply(randomDest,turn);
+            chessboard[randomDest] = promotionConstructors.get(randomLevel).apply(randomDest,turn);
             //add move to list
             String entry = moves.get(moves.size() - 1);//get current move string
             entry+="," + randomLevel;
@@ -354,9 +354,9 @@ public class GameActivity extends AppCompatActivity {
         //pop last move's end and start coord
         moves.remove(moves.size() - 1);
         //update board
-        pieces = lastBoard;
-        chessboardAdapter = new ChessboardAdapter(this,pieces);
-        gridview.setAdapter(chessboardAdapter);
+        chessboard = lastChessboard;
+        chessboardAdapter = new ChessboardAdapter(this,chessboard);
+        chessboardView.setAdapter(chessboardAdapter);
     }
 
     public void resign(View view) {
