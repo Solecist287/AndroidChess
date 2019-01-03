@@ -149,7 +149,6 @@ public class GameActivity extends AppCompatActivity {
     }
     private void evaluateTurn() {
         //check if next guy is in trouble
-        if (currentKing == null){return;}
         if (noSafeMoves()) {//stalemate or checkmate for next guy
             String popupMessage = "";
             if (currentKing.inCheck(chessboard)) {//checkmate
@@ -229,7 +228,7 @@ public class GameActivity extends AppCompatActivity {
 
     private Piece[] duplicateBoard(Piece[] p) {
         //THIS MAKES A DEEP COPY OF CHESSBOARD
-        final Piece[] result = new Piece[64];
+        Piece[] result = new Piece[64];
         for (int i = 0; i < 64; i++) {
             if (p[i] != null) {
                 result[i] = p[i].makeCopy();
