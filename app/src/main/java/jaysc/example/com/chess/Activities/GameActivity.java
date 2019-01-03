@@ -111,17 +111,10 @@ public class GameActivity extends AppCompatActivity {
         board[5] = new Bishop(5, 'b');
         board[6] = new Knight(6, 'b');
         board[7] = new Rook(7, 'b');
-        //black pawns
+        //pawns
         for (int i = 8; i < 16; i++) {
-            board[i] = new Pawn(i, 'b');
-        }
-        //blank squares
-        for (int i = 16; i < 48; i++) {
-            board[i] = null;
-        }
-        //white pawns
-        for (int i = 48; i < 56; i++) {
-            board[i] = new Pawn(i, 'w');
+            board[i] = new Pawn(i, 'b');//black pawns
+            board[i+40] = new Pawn(i+40,'w');//white pawns
         }
         //white pieces
         board[56] = new Rook(56, 'w');
