@@ -46,7 +46,7 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         turn = 'w';
-        drawRequest = -1;
+        drawRequest = -2;
         undo = -1;//arbitrary val
         turnCount = 0;
         moves = new ArrayList<>();
@@ -125,7 +125,7 @@ public class GameActivity extends AppCompatActivity {
     private void concludeTurn() {
         toggleTurn();
         //only reset drawrequest if it was not done on this turn
-        if (drawRequest != turnCount) {drawRequest = -1;}
+        if (drawRequest != turnCount) {drawRequest = -2;}
         turnCount++;
         chessboardAdapter.notifyDataSetChanged();
         evaluateTurn();
@@ -254,7 +254,7 @@ public class GameActivity extends AppCompatActivity {
 
     //draw button: click before making move so no general confirm button needed?
     public void draw(View view) {
-        if (drawRequest == -1) {
+        if (drawRequest == -2) {
             drawRequest = turnCount;
         } else if (drawRequest == turnCount - 1) {//previous turn already wants to draw
             //DRAW!!!
