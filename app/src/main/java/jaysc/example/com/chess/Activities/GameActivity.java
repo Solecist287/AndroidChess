@@ -38,9 +38,7 @@ public class GameActivity extends AppCompatActivity {
     private List<String> moves;//list of strings: "start,end(,promotion)"
     private Piece[] lastChessboard;//"snapshot" of last move's chessboard
     private Piece[] chessboard;//main chessboard
-    private King currentKing;
-    private King whiteKing;
-    private King blackKing;
+
     private ChessboardAdapter chessboardAdapter;
     private GridView chessboardView;
     @Override
@@ -55,9 +53,6 @@ public class GameActivity extends AppCompatActivity {
         lastChessboard = null;
         //create piece array to hold pieces
         chessboard = initBoard();
-
-        blackKing = (King)chessboard[4];
-        whiteKing = (King)chessboard[60];
         //create adapter to connect to pieces' images/chessboard positions
         chessboardAdapter = new ChessboardAdapter(this, chessboard);
         //fetch gridview from xml variable name
@@ -94,8 +89,6 @@ public class GameActivity extends AppCompatActivity {
             }
             chessboardAdapter.notifyDataSetChanged();
         });
-        //initial currentKing
-        currentKing = whiteKing;
         //initial message
         Toast.makeText(GameActivity.this, "White's turn", Toast.LENGTH_LONG).show();
     }
@@ -139,15 +132,10 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void toggleTurn() {
-        if (turn == 'w') {
-            turn = 'b';
-            currentKing = blackKing;
-        } else {
-            turn = 'w';
-            currentKing = whiteKing;
-        }
+        turn = (turn == 'w')? 'b':'w';
     }
     private void evaluateTurn() {
+        King currentKing = getCurrentKing(chessboard);
         //check if next guy is in trouble
         if (noSafeMoves()) {//stalemate or checkmate for next guy
             String popupMessage = "";
@@ -217,7 +205,7 @@ public class GameActivity extends AppCompatActivity {
 
     private boolean notCheckAfterMove(Piece[] board, int startIndex, int endIndex) {
         Piece[] b = duplicateBoard(board);
-        King k = (King)(b[currentKing.getIndex()]);
+        King k = getCurrentKing(b);
         //get piece of hypothetical pieces
         Piece chosenPiece = b[startIndex];
         //move this piece
@@ -347,7 +335,6 @@ public class GameActivity extends AppCompatActivity {
         toggleTurn();
         turnCount--;
         chessboardAdapter.selectedPieceIndex = -1;
-        drawRequest = -1;
         //mark turn that did undo
         undo = turnCount;
         //pop last move's end and start coord
@@ -356,6 +343,7 @@ public class GameActivity extends AppCompatActivity {
         chessboard = lastChessboard;
         chessboardAdapter = new ChessboardAdapter(this,chessboard);
         chessboardView.setAdapter(chessboardAdapter);
+        evaluateTurn();
     }
 
     public void resign(View view) {
@@ -371,5 +359,15 @@ public class GameActivity extends AppCompatActivity {
     private void returnToMainMenu(){
         Intent intent = new Intent(this, MenuActivity.class);
         startActivity(intent);
+    }
+
+    private King getCurrentKing(Piece[] board){
+        for (int i = 0; i < 64; i++){
+            Piece curPiece = board[i];
+            if (curPiece!=null && curPiece instanceof King && curPiece.getOwner() == turn){
+                return (King)curPiece;
+            }
+        }
+        return null; //shouldnt happen!!!
     }
 }
