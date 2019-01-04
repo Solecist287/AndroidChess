@@ -6,6 +6,7 @@ Clone this repository into some directory and import it into **Android Studio** 
 git clone https://github.com/Solecist287/AndroidChess.git
 ```
 Only supports Nexus 4 size for now.
+Only supports Android Pie.
 ## Tools Used
 * Java 8
 * Android Studio
