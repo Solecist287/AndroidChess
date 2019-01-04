@@ -136,54 +136,26 @@ public class GameActivity extends AppCompatActivity {
     }
     private void evaluateTurn() {
         King currentKing = getCurrentKing(chessboard);
+        String message = "";
         //check if next guy is in trouble
         if (noSafeMoves()) {//stalemate or checkmate for next guy
-            String popupMessage = "";
             if (currentKing.inCheck(chessboard)) {//checkmate
-                if (turn == 'w') {
-                    //Toast.makeText(GameActivity.this, "Checkmate, Black wins", Toast.LENGTH_LONG).show();
-                    popupMessage = "Checkmate, Black wins";
-                } else if (turn == 'b') {
-                    //Toast.makeText(GameActivity.this, "Checkmate, White wins", Toast.LENGTH_LONG).show();
-                    popupMessage = "Checkmate, White wins";
-                }
+                message = (turn == 'w')?"Checkmate, Black wins":"Checkmate, White wins";
             } else {//stalemate
                 //Toast.makeText(GameActivity.this, "Stalemate", Toast.LENGTH_LONG).show();
-                popupMessage = "Stalemate";
+                message = "Stalemate";
             }
             //END GAMMMMEEEEE HEEERRREEE
-            showSavePopup(popupMessage);
+            showSavePopup(message);
         } else {//normal move but next guy may be in check...
+            message = ((turn == 'w')?"White's":"Black's") + " turn";
             if (currentKing.inCheck(chessboard)) {
-                if (turn == 'w') {
-                    if (drawRequest != -1) {//also draw
-                        Toast.makeText(GameActivity.this, "White's turn, CHECK, Black offers DRAW", Toast.LENGTH_LONG).show();
-                    } else {//only check
-                        Toast.makeText(GameActivity.this, "White's turn, CHECK", Toast.LENGTH_LONG).show();
-                    }
-
-                } else {
-                    if (drawRequest != -1) {//also draw
-                        Toast.makeText(GameActivity.this, "Black's turn, CHECK, White offers DRAW", Toast.LENGTH_LONG).show();
-                    } else {//only check
-                        Toast.makeText(GameActivity.this, "Black's turn, CHECK", Toast.LENGTH_LONG).show();
-                    }
-                }
-            } else {//normal move but may be draw request sent
-                if (turn == 'w') {
-                    if (drawRequest != -1) {//draw request sent!
-                        Toast.makeText(GameActivity.this, "White's turn, Black offers DRAW", Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(GameActivity.this, "White's turn", Toast.LENGTH_LONG).show();
-                    }
-                } else {
-                    if (drawRequest != -1) {//draw request sent!
-                        Toast.makeText(GameActivity.this, "Black's turn, White offers DRAW", Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(GameActivity.this, "Black's turn", Toast.LENGTH_LONG).show();
-                    }
-                }
+                message+=", CHECK";
             }
+            if (drawRequest == turnCount-1) {//normal move but may be draw request sent
+                message+= ", " + ((turn == 'w')?"Black":"White") + " offers DRAW";
+            }
+            Toast.makeText(GameActivity.this, message, Toast.LENGTH_LONG).show();
         }
     }
 
