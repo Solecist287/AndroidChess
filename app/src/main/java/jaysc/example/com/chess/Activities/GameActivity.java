@@ -124,8 +124,6 @@ public class GameActivity extends AppCompatActivity {
     //switches turn, redraws chessboard, sees if next player is screwed
     private void concludeTurn() {
         toggleTurn();
-        //only reset drawrequest if it was not done on this turn
-        if (drawRequest != turnCount) {drawRequest = -2;}
         turnCount++;
         chessboardAdapter.notifyDataSetChanged();
         evaluateTurn();
@@ -136,10 +134,10 @@ public class GameActivity extends AppCompatActivity {
     }
     private void evaluateTurn() {
         King currentKing = getCurrentKing(chessboard);
-        String message = "";
+        String message;
         //check if next guy is in trouble
         if (noSafeMoves()) {//stalemate or checkmate for next guy
-            if (currentKing.inCheck(chessboard)) {//checkmate
+            if (currentKing!=null && currentKing.inCheck(chessboard)) {//checkmate
                 message = (turn == 'w')?"Checkmate, Black wins":"Checkmate, White wins";
             } else {//stalemate
                 //Toast.makeText(GameActivity.this, "Stalemate", Toast.LENGTH_LONG).show();
@@ -149,7 +147,7 @@ public class GameActivity extends AppCompatActivity {
             showSavePopup(message);
         } else {//normal move but next guy may be in check...
             message = ((turn == 'w')?"White's":"Black's") + " turn";
-            if (currentKing.inCheck(chessboard)) {
+            if (currentKing!=null && currentKing.inCheck(chessboard)) {
                 message+=", CHECK";
             }
             if (drawRequest == turnCount-1) {//normal move but may be draw request sent
@@ -183,7 +181,7 @@ public class GameActivity extends AppCompatActivity {
         //move this piece
         chosenPiece.move(endIndex, b);
         //return if king is in not in check...or not
-        return !k.inCheck(b);
+        return k!=null && !k.inCheck(b);
     }
 
     private Piece[] duplicateBoard(Piece[] p) {
@@ -309,6 +307,8 @@ public class GameActivity extends AppCompatActivity {
         chessboardAdapter.selectedPieceIndex = -1;
         //mark turn that did undo
         undo = turnCount;
+        //only remove draw request if turn is where it originated
+        if (undo == drawRequest){drawRequest = -2;}
         //pop last move's end and start coord
         moves.remove(moves.size() - 1);
         //update board
@@ -336,7 +336,7 @@ public class GameActivity extends AppCompatActivity {
     private King getCurrentKing(Piece[] board){
         for (int i = 0; i < 64; i++){
             Piece curPiece = board[i];
-            if (curPiece!=null && curPiece instanceof King && curPiece.getOwner() == turn){
+            if (curPiece instanceof King && curPiece.getOwner() == turn){
                 return (King)curPiece;
             }
         }
