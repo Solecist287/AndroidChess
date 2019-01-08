@@ -19,20 +19,20 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import jaysc.example.com.chess.Structures.Game;
+import jaysc.example.com.chess.Structures.GameEntry;
 import jaysc.example.com.chess.R;
 
 public class RecordedGamesActivity extends AppCompatActivity {
     public static final String PATH = "games.txt";
     public static final String DIVIDER = "******";
-    List<Game> games;
-    ArrayAdapter<Game>gameAdapter;
+    List<GameEntry> gameEntries;
+    ArrayAdapter<GameEntry>gameAdapter;
     Spinner dropDown;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recorded_games);
-        games = new ArrayList<>();
+        gameEntries = new ArrayList<>();
         readFromFile();
         //initialize spinner choice to name
         dropDown = findViewById(R.id.dropDown);
@@ -41,29 +41,29 @@ public class RecordedGamesActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {//name
-                    games.sort(new NameComparator());
+                    gameEntries.sort(new NameComparator());
                 }else if (position == 1) {//date
-                    games.sort(new DateComparator());
+                    gameEntries.sort(new DateComparator());
                 }
                 gameAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                games.sort(new NameComparator());
+                gameEntries.sort(new NameComparator());
                 gameAdapter.notifyDataSetChanged();
             }
         });
         //sort by name initially
-        games.sort(new NameComparator());
-        //hook up adapter to games arraylist
-        gameAdapter = new ArrayAdapter<>(this,R.layout.activity_recorded_listview,games);
+        gameEntries.sort(new NameComparator());
+        //hook up adapter to gameEntries arraylist
+        gameAdapter = new ArrayAdapter<>(this,R.layout.activity_recorded_listview, gameEntries);
         ListView gridview = findViewById(R.id.gameList);
         gridview.setAdapter(gameAdapter);
         gridview.setOnItemClickListener((parent, v, position, id) -> {
-            Game selectedGame = games.get(position);
+            GameEntry selectedGameEntry = gameEntries.get(position);
             Intent intent = new Intent(getApplicationContext(),ReplayGameActivity.class);
-            intent.putStringArrayListExtra(ReplayGameActivity.MOVES,selectedGame.getMoves());
+            intent.putStringArrayListExtra(ReplayGameActivity.MOVES, selectedGameEntry.getMoves());
             startActivity(intent);
         });
     }
@@ -88,7 +88,7 @@ public class RecordedGamesActivity extends AppCompatActivity {
                     }else if (i == lastAsteriskLine + 2){
                         date = LocalDate.parse(receiveString);
                     }else if (receiveString.equals(DIVIDER)){
-                        games.add(new Game(name,date,moves));
+                        gameEntries.add(new GameEntry(name,date,moves));
                         lastAsteriskLine = i;
                         moves = new ArrayList<>();
                     } else {
@@ -111,15 +111,15 @@ public class RecordedGamesActivity extends AppCompatActivity {
 
     //comparators used to sort by their respective category when a
     //category is chosen
-    public class NameComparator implements Comparator<Game>{
+    public class NameComparator implements Comparator<GameEntry>{
         @Override
-        public int compare(Game g1, Game g2) {
+        public int compare(GameEntry g1, GameEntry g2) {
             return g1.getName().compareTo(g2.getName());
         }
     }
-    public class DateComparator implements Comparator<Game>{
+    public class DateComparator implements Comparator<GameEntry>{
         @Override
-        public int compare(Game g1, Game g2) {
+        public int compare(GameEntry g1, GameEntry g2) {
             return g1.getDate().compareTo(g2.getDate());
         }
     }

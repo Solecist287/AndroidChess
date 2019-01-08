@@ -63,7 +63,6 @@ public class ChessboardAdapter extends BaseAdapter {
             imageView.setImageResource(pieceImgs.getResourceId(p.getImageIndex(),0));
         }
         if (position == selectedPieceIndex) {
-           // imageView.setBackgroundColor(Color.parseColor("#50e0ff"));
             imageView.setColorFilter(Color.CYAN);
         }else{
             imageView.setColorFilter(0);

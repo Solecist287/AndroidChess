@@ -28,19 +28,14 @@ public class GameActivity extends AppCompatActivity {
     private int drawRequest;//keeps track of which turn wants to draw
     private int undo;//keeps track of which turn wants to undo
     public static int turnCount;
-    public final static List<BiFunction<Integer,Character,Piece>> promotionConstructors = Arrays.asList(
-            Queen::new,
-            Rook::new,
-            Bishop::new,
-            Knight::new);//constructors for pawn promotions
+    public final static List<BiFunction<Integer,Character,Piece>> promotionConstructors = Arrays.asList(Queen::new, Rook::new, Bishop::new, Knight::new);//constructors for pawn promotions
     private final static String[] promotionLevels = {"(Q) Queen", "(R) Rook", "(B) Bishop", "(N) Knight"};//used for pawn promotion display
-
     private List<String> moves;//list of strings: "start,end(,promotion)"
     private Piece[] lastChessboard;//"snapshot" of last move's chessboard
     private Piece[] chessboard;//main chessboard
-
     private ChessboardAdapter chessboardAdapter;
     private GridView chessboardView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +63,6 @@ public class GameActivity extends AppCompatActivity {
             } else if (chessboardAdapter.selectedPieceIndex != -1) {
                 //entertains move if there is a selectedpiece and clicked destination
                 Piece selectedPiece = chessboard[chessboardAdapter.selectedPieceIndex];
-
                 if (selectedPiece.isMoveValid(position, chessboard)
                         && notCheckAfterMove(chessboard, selectedPiece.getIndex(), position)) {//MOVE IS VALID
                     //make copy of board
@@ -184,7 +178,7 @@ public class GameActivity extends AppCompatActivity {
         return k!=null && !k.inCheck(b);
     }
 
-    private Piece[] duplicateBoard(Piece[] p) {
+    public static Piece[] duplicateBoard(Piece[] p) {
         //THIS MAKES A DEEP COPY OF CHESSBOARD
         Piece[] result = new Piece[64];
         for (int i = 0; i < 64; i++) {
@@ -321,8 +315,7 @@ public class GameActivity extends AppCompatActivity {
     public void resign(View view) {
         //no saved moves
         if (moves.size() == 0) {
-            Intent intent = new Intent(this, MenuActivity.class);
-            startActivity(intent);
+            returnToMainMenu();
         } else {
             if (turn == 'w') showSavePopup("Black wins"); else showSavePopup("White wins");
         }
