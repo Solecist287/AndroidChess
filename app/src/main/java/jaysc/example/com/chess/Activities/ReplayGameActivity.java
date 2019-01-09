@@ -13,7 +13,7 @@ import jaysc.example.com.chess.Adapters.ChessboardAdapter;
 import jaysc.example.com.chess.R;
 import jaysc.example.com.chess.Pieces.*;
 
-import static jaysc.example.com.chess.Activities.GameActivity.initBoard;
+import static jaysc.example.com.chess.Activities.PVPGameActivity.initBoard;
 
 public class ReplayGameActivity extends AppCompatActivity {
     public static final String MOVES = "moves";
@@ -77,7 +77,7 @@ public class ReplayGameActivity extends AppCompatActivity {
             //pawn promotion
             if (args.length == 3){
                 int index = Integer.parseInt(args[2]);
-                pieces[end] = GameActivity.promotionConstructors.get(index).apply(end,turn);
+                pieces[end] = PVPGameActivity.promotionConstructors.get(index).apply(end,turn);
             }
         }
         chessboardAdapter.notifyDataSetChanged();
