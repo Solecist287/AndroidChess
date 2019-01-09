@@ -11,6 +11,7 @@ import android.widget.Spinner;
 import jaysc.example.com.chess.R;
 
 public class PregameActivity extends AppCompatActivity {
+    Spinner whiteDropDown;
     Spinner modeDropDown;
     LinearLayout PVCLayout;
     @Override
@@ -18,6 +19,7 @@ public class PregameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pregame);
         PVCLayout = findViewById(R.id.PVCLayout);
+        whiteDropDown = findViewById(R.id.whiteDropDown);
         modeDropDown = findViewById(R.id.modeDropDown);
         modeDropDown.setSelection(0);//set to name
         modeDropDown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -43,8 +45,21 @@ public class PregameActivity extends AppCompatActivity {
     }
 
     public void playGame(View view) {
-        //later make subclasses of gameactivity and pass info from spinners to it
-        Intent intent = new Intent(this, GameActivity.class);
-        startActivity(intent);
+        int selectedModeIndex = modeDropDown.getSelectedItemPosition();
+        Intent intent;
+        //for future
+        if (selectedModeIndex == 0) {//PVP
+            //later make subclasses of gameactivity and pass info from spinners to it
+            intent = new Intent(this, GameActivity.class);
+            startActivity(intent);
+            //intent = new Intent(this, PVPGameActivity.class);
+            //startActivity(intent);
+        }else if (selectedModeIndex == 1){//PVC
+            //intent = new Intent(this, PVCGameActivity.class);
+            //startActivity(intent);
+        }
+
+
+
     }
 }
