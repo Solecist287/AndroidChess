@@ -10,10 +10,26 @@
     <string name="undo">Undo</string>
     <string name="next_move">Next move</string>
     <string name="previous_move">Previous move</string>
-    <string-array name="dropDownChoices">
+    <string name="mode">Mode</string>
+    <string name="pregame">Pregame</string>
+    <string name="white">White</string>
+    <string name="play">Play</string>
+
+    <string-array name="gameSortChoices">
         <item>Name</item>
         <item>Date</item>
     </string-array>
+
+    <string-array name="modeChoices">
+        <item>PVP</item>
+        <item>PVC</item>
+    </string-array>
+
+    <string-array name="whiteChoices">
+        <item>Player</item>
+        <item>Computer</item>
+    </string-array>
+
     <integer-array name="piece_imgs">
         <item>@drawable/bishop_black</item>
         <item>@drawable/bishop_white</item>

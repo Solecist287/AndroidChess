@@ -35,7 +35,7 @@ public class RecordedGamesActivity extends AppCompatActivity {
         gameEntries = new ArrayList<>();
         readFromFile();
         //initialize spinner choice to name
-        dropDown = findViewById(R.id.dropDown);
+        dropDown = findViewById(R.id.gameSortDropDown);
         dropDown.setSelection(0);//set to name
         dropDown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

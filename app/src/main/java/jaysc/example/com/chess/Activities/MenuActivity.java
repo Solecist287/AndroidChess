@@ -16,8 +16,8 @@ public class MenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_menu);
     }
 
-    public void launchGameScreen(View view) {
-        Intent intent = new Intent(this, GameActivity.class);
+    public void launchPregameScreen(View view) {
+        Intent intent = new Intent(this, PregameActivity.class);
         startActivity(intent);
     }
 
