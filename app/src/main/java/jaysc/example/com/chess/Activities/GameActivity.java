@@ -34,7 +34,7 @@ public class GameActivity extends AppCompatActivity {
     private Piece[] lastChessboard;//"snapshot" of last move's chessboard
     private Piece[] chessboard;//main chessboard
     private ChessboardAdapter chessboardAdapter;
-    private GridView chessboardView;
+    private GridView chessboardView; 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
