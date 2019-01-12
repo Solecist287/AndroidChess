@@ -22,23 +22,34 @@ import java.util.function.BiFunction;
 import jaysc.example.com.chess.Adapters.ChessboardAdapter;
 import jaysc.example.com.chess.R;
 import jaysc.example.com.chess.Pieces.*;
-import jaysc.example.com.chess.Structures.Game;
 
-public class PVPGameActivity extends AppCompatActivity {
+public class GameActivity extends AppCompatActivity {
+    private char turn;//white('w') or black('b') player
     private int drawRequest;//keeps track of which turn wants to draw
+    private int undo;//keeps track of which turn wants to undo
+    public static int turnCount;
+    public final static List<BiFunction<Integer,Character,Piece>> promotionConstructors = Arrays.asList(Queen::new, Rook::new, Bishop::new, Knight::new);//constructors for pawn promotions
+    private final static String[] promotionLevels = {"(Q) Queen", "(R) Rook", "(B) Bishop", "(N) Knight"};//used for pawn promotion display
+    private List<String> moves;//list of strings: "start,end(,promotion)"
+    private Piece[] lastChessboard;//"snapshot" of last move's chessboard
+    private Piece[] chessboard;//main chessboard
     private ChessboardAdapter chessboardAdapter;
     private GridView chessboardView;
-    private Game game;
-    private final static List<BiFunction<Integer,Character,Piece>> promotionConstructors = Arrays.asList(Queen::new, Rook::new, Bishop::new, Knight::new);//constructors for pawn promotions
-    private final static String[] promotionLevels = {"(Q) Queen", "(R) Rook", "(B) Bishop", "(N) Knight"};//used for pawn promotion display
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pvp_game);
+        setContentView(R.layout.activity_game);
+        turn = 'w';
         drawRequest = -2;
-        game = new Game();
+        undo = -1;//arbitrary val
+        turnCount = 0;
+        moves = new ArrayList<>();
+        lastChessboard = null;
+        //create piece array to hold pieces
+        chessboard = initBoard();
         //create adapter to connect to pieces' images/chessboard positions
-        chessboardAdapter = new ChessboardAdapter(this, game.getChessboard());
+        chessboardAdapter = new ChessboardAdapter(this, chessboard);
         //fetch gridview from xml variable name
         chessboardAdapter.selectedPieceIndex = -1;
         chessboardView = findViewById(R.id.chessboard);
@@ -73,14 +84,121 @@ public class PVPGameActivity extends AppCompatActivity {
             chessboardAdapter.notifyDataSetChanged();
         });
         //initial message
-        Toast.makeText(PVPGameActivity.this, "White's turn", Toast.LENGTH_LONG).show();
+        Toast.makeText(GameActivity.this, "White's turn", Toast.LENGTH_LONG).show();
+    }
+
+    public static Piece[] initBoard() {
+        Piece[] board = new Piece[64];
+        //black pieces
+        board[0] = new Rook(0, 'b');
+        board[1] = new Knight(1, 'b');
+        board[2] = new Bishop(2, 'b');
+        board[3] = new Queen(3, 'b');
+        board[4] = new King(4, 'b');
+        board[5] = new Bishop(5, 'b');
+        board[6] = new Knight(6, 'b');
+        board[7] = new Rook(7, 'b');
+        //pawns
+        for (int i = 8; i < 16; i++) {
+            board[i] = new Pawn(i, 'b');//black pawns
+            board[i+40] = new Pawn(i+40,'w');//white pawns
+        }
+        //white pieces
+        board[56] = new Rook(56, 'w');
+        board[57] = new Knight(57, 'w');
+        board[58] = new Bishop(58, 'w');
+        board[59] = new Queen(59, 'w');
+        board[60] = new King(60, 'w');
+        board[61] = new Bishop(61, 'w');
+        board[62] = new Knight(62, 'w');
+        board[63] = new Rook(63, 'w');
+        return board;
+    }
+
+    //switches turn, redraws chessboard, sees if next player is screwed
+    private void concludeTurn() {
+        toggleTurn();
+        turnCount++;
+        chessboardAdapter.notifyDataSetChanged();
+        evaluateTurn();
+    }
+
+    private void toggleTurn() {
+        turn = (turn == 'w')? 'b':'w';
+    }
+    private void evaluateTurn() {
+        King currentKing = getCurrentKing(chessboard);
+        String message;
+        //check if next guy is in trouble
+        if (noSafeMoves()) {//stalemate or checkmate for next guy
+            if (currentKing!=null && currentKing.inCheck(chessboard)) {//checkmate
+                message = (turn == 'w')?"Checkmate, Black wins":"Checkmate, White wins";
+            } else {//stalemate
+                //Toast.makeText(GameActivity.this, "Stalemate", Toast.LENGTH_LONG).show();
+                message = "Stalemate";
+            }
+            //END GAMMMMEEEEE HEEERRREEE
+            showSavePopup(message);
+        } else {//normal move but next guy may be in check...
+            message = ((turn == 'w')?"White's":"Black's") + " turn";
+            if (currentKing!=null && currentKing.inCheck(chessboard)) {
+                message+=", CHECK";
+            }
+            if (drawRequest == turnCount-1) {//normal move but may be draw request sent
+                message+= ", " + ((turn == 'w')?"Black":"White") + " offers DRAW";
+            }
+            Toast.makeText(GameActivity.this, message, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private boolean noSafeMoves() {
+        for (int i = 0; i < 64; i++) {
+            Piece curPiece = chessboard[i];
+            //if there's a piece that current player owns
+            if (curPiece != null && curPiece.getOwner() == turn) {
+                for (int j = 0; j < 64; j++) {
+                    //current piece is able to move somewhere
+                    if (curPiece.isMoveValid(j, chessboard) && notCheckAfterMove(chessboard, i, j)) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean notCheckAfterMove(Piece[] board, int startIndex, int endIndex) {
+        Piece[] b = duplicateBoard(board);
+        King k = getCurrentKing(b);
+        //get piece of hypothetical pieces
+        Piece chosenPiece = b[startIndex];
+        //move this piece
+        chosenPiece.move(endIndex, b);
+        //return if king is in not in check...or not
+        return k!=null && !k.inCheck(b);
+    }
+
+    public static Piece[] duplicateBoard(Piece[] p) {
+        //THIS MAKES A DEEP COPY OF CHESSBOARD
+        Piece[] result = new Piece[64];
+        for (int i = 0; i < 64; i++) {
+            if (p[i] != null) {
+                result[i] = p[i].makeCopy();
+            }
+        }
+        return result;
     }
 
     private void showPawnPopup(final int selectedPieceIndex, final char owner) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Promote Pawn...");
         builder.setItems(promotionLevels, (dialog, which) -> {
-            game.promotePawn(selectedPieceIndex, which, owner);
+            // the user clicked on promotionLevels[which]
+            chessboard[selectedPieceIndex] = promotionConstructors.get(which).apply(selectedPieceIndex,owner);
+            //add move to list
+            String entry = moves.get(moves.size() - 1);//get current move string
+            entry+=","+which;
+            moves.set(moves.size() - 1, entry);
             chessboardAdapter.notifyDataSetChanged();
         });
         builder.show();
@@ -113,7 +231,6 @@ public class PVPGameActivity extends AppCompatActivity {
 
     private void writeToFile(String name) {
         try {
-            List<String> moves = game.getMoves();
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(this.getApplicationContext().openFileOutput(RecordedGamesActivity.PATH, Context.MODE_APPEND | Context.MODE_PRIVATE));
             outputStreamWriter.write(name + "\n");
             outputStreamWriter.write(LocalDate.now().toString() + "\n");
@@ -123,7 +240,7 @@ public class PVPGameActivity extends AppCompatActivity {
             outputStreamWriter.write(RecordedGamesActivity.DIVIDER + "\n");
             outputStreamWriter.close();
         } catch (IOException e) {
-            Toast.makeText(PVPGameActivity.this, "file write failed", Toast.LENGTH_LONG).show();
+            Toast.makeText(GameActivity.this, "file write failed", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -139,7 +256,6 @@ public class PVPGameActivity extends AppCompatActivity {
     }
 
     //AI button: make random move and conclude turn
-    /*
     public void aiMove(View view) {
         //make copy of board
         lastChessboard = duplicateBoard(chessboard);
@@ -175,7 +291,6 @@ public class PVPGameActivity extends AppCompatActivity {
         //change turn, redraw chessboard, evaluate if next guy is screwed
         concludeTurn();
     }
-    */
 
     //undo button: undo last move. does not allow second chance to draw
     public void undoMove(View view) {
@@ -199,10 +314,10 @@ public class PVPGameActivity extends AppCompatActivity {
 
     public void resign(View view) {
         //no saved moves
-        if (game.getMoves().size() == 0) {
+        if (moves.size() == 0) {
             returnToMainMenu();
         } else {
-            if (game.getTurn() == 'w') showSavePopup("Black wins"); else showSavePopup("White wins");
+            if (turn == 'w') showSavePopup("Black wins"); else showSavePopup("White wins");
         }
     }
 
@@ -211,4 +326,13 @@ public class PVPGameActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private King getCurrentKing(Piece[] board){
+        for (int i = 0; i < 64; i++){
+            Piece curPiece = board[i];
+            if (curPiece instanceof King && curPiece.getOwner() == turn){
+                return (King)curPiece;
+            }
+        }
+        return null; //shouldnt happen!!!
+    }
 }
