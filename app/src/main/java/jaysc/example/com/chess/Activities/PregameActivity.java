@@ -50,8 +50,10 @@ public class PregameActivity extends AppCompatActivity {
         //for future
         if (selectedModeIndex == 0) {//PVP
             //later make subclasses of gameactivity and pass info from spinners to it
-            intent = new Intent(this, PVPGameActivity.class);
+            intent = new Intent(this, GameActivity.class);
             startActivity(intent);
+            //intent = new Intent(this, PVPGameActivity.class);
+            //startActivity(intent);
         }else if (selectedModeIndex == 1){//PVC
             //intent = new Intent(this, PVCGameActivity.class);
             //startActivity(intent);
