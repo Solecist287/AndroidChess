@@ -17,7 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.RecordedGamesActivity" />
-        <activity android:name=".Activities.GameActivity" />
+        <activity android:name=".Activities.PVPGameActivity" />
         <activity android:name=".Activities.ReplayGameActivity" />
         <activity android:name=".Activities.PregameActivity"></activity>
     </application>
