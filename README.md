@@ -16,9 +16,7 @@ Only supports Android Pie.
 * Resign
 * Draw
 * Check warnings, checkmate, stalemate
-* Up to two players
-    * One player: Computer chooses random move
-    * Two players: Each player takes turns
+* AI can choose random move
 * Save games and replay them one move at a time
 ## How to use
 ### Moving pieces
