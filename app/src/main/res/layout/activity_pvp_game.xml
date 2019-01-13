@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.GameActivity"
+    tools:context=".Activities.PVPGameActivity"
     android:orientation="vertical"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <Button
-            android:id="@+id/button_resign"
+            android:id="@+id/button_pvp_resign"
             android:layout_width="78dp"
             android:layout_height="37dp"
             android:layout_marginTop="10dp"
@@ -31,7 +31,7 @@
             android:onClick="resign"
             android:text="@string/resign" />
         <Button
-            android:id="@+id/button_draw"
+            android:id="@+id/button_pvp_draw"
             android:layout_width="78dp"
             android:layout_height="37dp"
             android:layout_marginTop="10dp"
@@ -41,7 +41,7 @@
             android:text="@string/draw" />
     </LinearLayout>
     <GridView
-        android:id="@+id/chessboard"
+        android:id="@+id/pvp_chessboard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:numColumns="8"
@@ -49,32 +49,14 @@
         android:horizontalSpacing="0dp"
         android:layout_gravity="center_horizontal">
     </GridView>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/button_ai"
-            android:layout_width="78dp"
-            android:layout_height="37dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp"
-            android:gravity="center"
-            android:onClick="aiMove"
-            android:text="@string/ai" />
-        <Button
-            android:id="@+id/button_undo"
-            android:layout_width="78dp"
-            android:layout_height="37dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp"
-            android:gravity="center"
-            android:onClick="undoMove"
-            android:text="@string/undo" />
-    </LinearLayout>
+    <Button
+        android:id="@+id/button_pvp_undo"
+        android:layout_width="78dp"
+        android:layout_height="37dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:onClick="undoMove"
+        android:text="@string/undo" />
 </LinearLayout>
