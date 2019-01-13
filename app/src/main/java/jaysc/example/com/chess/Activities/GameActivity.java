@@ -93,6 +93,14 @@ public abstract class GameActivity extends AppCompatActivity {
         turn = (turn == 'w')? 'b':'w';
     }
 
+    //switches turn, redraws chessboard, sees if next player is screwed
+    protected void concludeTurn() {
+        toggleTurn();
+        turnCount++;
+        chessboardAdapter.notifyDataSetChanged();
+        evaluateTurn();
+    }
+
     protected boolean noSafeMoves() {
         for (int i = 0; i < 64; i++) {
             Piece curPiece = chessboard[i];
@@ -206,6 +214,7 @@ public abstract class GameActivity extends AppCompatActivity {
 
     public abstract void resign(View view);
 
+    protected abstract void evaluateTurn();
     //other funcs
     public abstract int getChessboardId();
     public abstract int getViewId();

@@ -63,14 +63,6 @@ public class PVPGameActivity extends GameActivity {
         Toast.makeText(PVPGameActivity.this, "White's turn", Toast.LENGTH_LONG).show();
     }
 
-    //switches turn, redraws chessboard, sees if next player is screwed
-    protected void concludeTurn() {
-        toggleTurn();
-        turnCount++;
-        chessboardAdapter.notifyDataSetChanged();
-        evaluateTurn();
-    }
-
     //draw button: click before making move so no general confirm button needed?
     public void draw(View view) {
         if (drawRequest == -2) {
@@ -81,44 +73,6 @@ public class PVPGameActivity extends GameActivity {
             showSavePopup("Draw");
         }
     }
-
-    //AI button: make random move and conclude turn
-    public void aiMove(View view) {
-        //make copy of board
-        lastChessboard = duplicateBoard(chessboard);
-        //array of pairs(piece index and destination index)
-        List <List<Integer>> generatedMoves = new ArrayList<>();
-        for (int i = 0; i < 64; i++){
-            Piece curPiece = chessboard[i];
-            if (curPiece!=null && curPiece.getOwner() == turn){
-                for (int j = 0; j < 64; j++){
-                    if (curPiece.isMoveValid(j,chessboard) && notCheckAfterMove(chessboard, i, j)){
-                        generatedMoves.add(new ArrayList<>(Arrays.asList(i,j)));
-                    }
-                }
-            }
-        }
-        int randomMoveIndex = (int)(Math.random()*generatedMoves.size());
-        Piece randomPiece = chessboard[generatedMoves.get(randomMoveIndex).get(0)];
-        int randomDest = generatedMoves.get(randomMoveIndex).get(1);
-        //update move list
-        moves.add(randomPiece.getIndex() + "," + randomDest);
-        //move piece
-        randomPiece.move(randomDest,chessboard);
-        //if pawn promotion is being done, choose random promotion
-        if (randomPiece instanceof Pawn && (randomPiece.getIndex() < 8 || randomPiece.getIndex() > 55)) {
-            //pawn promotion
-            int randomLevel = (int) (Math.random() * (promotionLevels.length));
-            chessboard[randomDest] = promotionConstructors.get(randomLevel).apply(randomDest,turn);
-            //add move to list
-            String entry = moves.get(moves.size() - 1);//get current move string
-            entry+="," + randomLevel;
-            moves.set(moves.size() - 1, entry);
-        }
-        //change turn, redraw chessboard, evaluate if next guy is screwed
-        concludeTurn();
-    }
-
 
     //undo button: undo last move. does not allow second chance to draw
     public void undoMove(View view) {

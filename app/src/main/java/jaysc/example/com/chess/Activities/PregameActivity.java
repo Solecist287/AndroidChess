@@ -54,6 +54,12 @@ public class PregameActivity extends AppCompatActivity {
             startActivity(intent);
         }else if (selectedModeIndex == 1){//PVC
             intent = new Intent(this, PVCGameActivity.class);
+            //tell PVCGameActivity which colors the computer and player are
+            if (whiteDropDown.getSelectedItemPosition() == 0) {//player is white
+                intent.putExtra(PVCGameActivity.PLAYER, 'w');
+            }else if (whiteDropDown.getSelectedItemPosition() == 1) {//computer is white
+                intent.putExtra(PVCGameActivity.PLAYER, 'b');
+            }
             startActivity(intent);
         }
 
