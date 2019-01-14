@@ -16,8 +16,10 @@ Only supports Android Pie.
 * Resign
 * Draw
 * Check warnings, checkmate, stalemate
-* AI can choose random move
-* Save games and replay them one move at a time
+* Two game modes
+    * Player v Player
+    * Player v Computer (AI does random move)
+* Save games and replay them move by move
 ## How to use
 ### Moving pieces
 Pieces can be selected by touching their current location, which highlights them, and then are moved by tapping their valid destination.
@@ -25,8 +27,6 @@ Pieces can be selected by touching their current location, which highlights them
 Players can resign at any time by clicking the **resign button**, which then prompts the player to choose whether or not to save the game. Resigning counts as a win for the other player.
 ### Drawing
 The game can end in a draw if one player sends a draw request, by clicking the **draw button**, and the other accepts it, by clicking the **draw button immediately after**.
-### Choosing a random move for a player's turn
-Clicking the **AI button** chooses a random move for the current player's turn.
 ### Saving a game
 When a game terminates in any fashion, a prompt appears on the screen. The player must enter a **non-empty** name for the recorded game and click the **OK button**. After having entered a name for the game, it is saved to an internal text file called "games.txt" which holds all past saved games.
 ### Replaying a game
