@@ -212,7 +212,14 @@ public abstract class GameActivity extends AppCompatActivity {
     //button functions
     public abstract void undoMove(View view);
 
-    public abstract void resign(View view);
+    public void resign(View view) {
+        //no saved moves
+        if (moves.size() == 0) {
+            returnToMainMenu();
+        } else {
+            if (turn == 'w') showSavePopup("Black wins"); else showSavePopup("White wins");
+        }
+    }
 
     protected abstract void evaluateTurn();
     //other funcs

@@ -81,7 +81,7 @@ public class PVCGameActivity extends GameActivity {
 
     @Override
     public void resign(View view) {
-        returnToMainMenu();
+        super.resign(view);
     }
 
     //AI button: make random move and conclude turn

@@ -94,14 +94,7 @@ public class PVPGameActivity extends GameActivity {
         evaluateTurn();
     }
 
-    public void resign(View view) {
-        //no saved moves
-        if (moves.size() == 0) {
-            returnToMainMenu();
-        } else {
-            if (turn == 'w') showSavePopup("Black wins"); else showSavePopup("White wins");
-        }
-    }
+    public void resign(View view){super.resign(view);}
 
     protected void evaluateTurn() {
         King currentKing = getCurrentKing(chessboard);
