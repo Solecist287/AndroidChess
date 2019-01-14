@@ -19,6 +19,7 @@ public class PregameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pregame);
         PVCLayout = findViewById(R.id.PVCLayout);
+        PVCLayout.setVisibility(View.INVISIBLE);
         whiteDropDown = findViewById(R.id.whiteDropDown);
         modeDropDown = findViewById(R.id.modeDropDown);
         modeDropDown.setSelection(0);//set to name

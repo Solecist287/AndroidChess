@@ -89,11 +89,21 @@ public abstract class GameActivity extends AppCompatActivity {
         return board;
     }
 
+    public static Piece[] duplicateBoard(Piece[] p) {
+        //THIS MAKES A DEEP COPY OF CHESSBOARD
+        Piece[] result = new Piece[64];
+        for (int i = 0; i < 64; i++) {
+            if (p[i] != null) {
+                result[i] = p[i].makeCopy();
+            }
+        }
+        return result;
+    }
+
     protected void toggleTurn() {
         turn = (turn == 'w')? 'b':'w';
     }
 
-    //switches turn, redraws chessboard, sees if next player is screwed
     protected void concludeTurn() {
         toggleTurn();
         turnCount++;
@@ -128,17 +138,17 @@ public abstract class GameActivity extends AppCompatActivity {
         return k!=null && !k.inCheck(b);
     }
 
-    public static Piece[] duplicateBoard(Piece[] p) {
-        //THIS MAKES A DEEP COPY OF CHESSBOARD
-        Piece[] result = new Piece[64];
-        for (int i = 0; i < 64; i++) {
-            if (p[i] != null) {
-                result[i] = p[i].makeCopy();
+    protected King getCurrentKing(Piece[] board){
+        for (int i = 0; i < 64; i++){
+            Piece curPiece = board[i];
+            if (curPiece instanceof King && curPiece.getOwner() == turn){
+                return (King)curPiece;
             }
         }
-        return result;
+        return null; //shouldnt happen!!!
     }
 
+    //popup funcs
     protected void showPawnPopup(final int selectedPieceIndex, final char owner) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Promote Pawn...");
@@ -179,6 +189,7 @@ public abstract class GameActivity extends AppCompatActivity {
         builder.show();
     }
 
+    //endgame funcs
     protected void writeToFile(String name) {
         try {
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(this.getApplicationContext().openFileOutput(RecordedGamesActivity.PATH, Context.MODE_APPEND | Context.MODE_PRIVATE));
@@ -199,16 +210,6 @@ public abstract class GameActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    protected King getCurrentKing(Piece[] board){
-        for (int i = 0; i < 64; i++){
-            Piece curPiece = board[i];
-            if (curPiece instanceof King && curPiece.getOwner() == turn){
-                return (King)curPiece;
-            }
-        }
-        return null; //shouldnt happen!!!
-    }
-
     //button functions
     public abstract void undoMove(View view);
 
@@ -221,8 +222,10 @@ public abstract class GameActivity extends AppCompatActivity {
         }
     }
 
+    //function for seeing next turn's situation
     protected abstract void evaluateTurn();
-    //other funcs
+
+    //id functions
     public abstract int getChessboardId();
     public abstract int getViewId();
 }

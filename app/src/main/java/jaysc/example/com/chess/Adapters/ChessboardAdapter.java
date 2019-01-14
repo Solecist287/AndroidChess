@@ -40,8 +40,10 @@ public class ChessboardAdapter extends BaseAdapter {
         ImageView imageView;
         if (convertView == null) {
             // if it's not recycled, initialize some attributes
+            int side = (mContext.getResources().getDisplayMetrics().widthPixels)/8;
+            //int side = 90;
             imageView = new ImageView(mContext);
-            imageView.setLayoutParams(new ViewGroup.LayoutParams(90,90));
+            imageView.setLayoutParams(new ViewGroup.LayoutParams(side,side));
             imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             imageView.setPadding(8, 8, 8, 8);
             //choose black or white for square
