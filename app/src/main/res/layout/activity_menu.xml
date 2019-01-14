@@ -5,36 +5,38 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Activities.MenuActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="86dp"
+        android:text="@string/main_menu"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
         android:orientation="vertical"
-        android:gravity="center">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="27dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp"
-            android:text="@string/main_menu"
-            android:textSize="14sp"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <Button
-            android:id="@+id/button_newGame"
-            android:layout_width="187dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp"
-            android:text="@string/new_game"
-            android:onClick="launchPregameScreen"/>
+            android:layout_width="265dp"
+            android:layout_height="66dp"
+            android:onClick="launchPregameScreen"
+            android:text="@string/new_game" />
+
         <Button
-            android:id="@+id/button_recordedGames"
-            android:layout_width="180dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp"
-            android:text="@string/recorded_games"
-            android:onClick="launchRecordedGamesScreen"/>
+            android:layout_width="265dp"
+            android:layout_height="66dp"
+            android:onClick="launchRecordedGamesScreen"
+            android:text="@string/recorded_games" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
