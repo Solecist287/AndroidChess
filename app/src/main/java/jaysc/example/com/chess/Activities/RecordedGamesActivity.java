@@ -57,7 +57,7 @@ public class RecordedGamesActivity extends AppCompatActivity {
         //sort by name initially
         gameEntries.sort(new NameComparator());
         //hook up adapter to gameEntries arraylist
-        gameAdapter = new ArrayAdapter<>(this,R.layout.activity_recorded_listview, gameEntries);
+        gameAdapter = new ArrayAdapter<>(this,R.layout.activity_recorded_list_entry, gameEntries);
         ListView gridview = findViewById(R.id.gameList);
         gridview.setAdapter(gameAdapter);
         gridview.setOnItemClickListener((parent, v, position, id) -> {
