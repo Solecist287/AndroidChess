@@ -41,7 +41,6 @@ public class ChessboardAdapter extends BaseAdapter {
         if (convertView == null) {
             // if it's not recycled, initialize some attributes
             int side = (mContext.getResources().getDisplayMetrics().widthPixels)/8;
-            //int side = 90;
             imageView = new ImageView(mContext);
             imageView.setLayoutParams(new ViewGroup.LayoutParams(side,side));
             imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);

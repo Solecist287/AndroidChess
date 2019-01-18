@@ -161,7 +161,8 @@ public abstract class GameActivity extends AppCompatActivity {
             moves.set(moves.size() - 1, entry);
             chessboardAdapter.notifyDataSetChanged();
         });
-        builder.show();
+        AlertDialog alertDialog = builder.show();
+        alertDialog.setCanceledOnTouchOutside(false);
     }
 
     protected void showSavePopup(final String titleMessage) {
@@ -186,7 +187,8 @@ public abstract class GameActivity extends AppCompatActivity {
             dialog.cancel();
             returnToMainMenu();
         });
-        builder.show();
+        AlertDialog alertDialog = builder.show();
+        alertDialog.setCanceledOnTouchOutside(false);
     }
 
     //endgame funcs

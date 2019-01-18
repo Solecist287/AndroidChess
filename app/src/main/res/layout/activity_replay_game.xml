@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:onClick="launchRecordedGamesScreen"
         android:text="@string/returnString"
-        />
+        style="?android:attr/borderlessButtonStyle"/>
     <GridView
         android:id="@+id/chessboard_replay"
         android:layout_width="wrap_content"
@@ -31,13 +31,13 @@
             android:onClick="prevMove"
             android:gravity="center"
             android:text="@string/previous_move"
-            />
+            style="?android:attr/borderlessButtonStyle"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="nextMove"
             android:gravity="center"
             android:text="@string/next_move"
-            />
+            style="?android:attr/borderlessButtonStyle"/>
     </LinearLayout>
 </LinearLayout>

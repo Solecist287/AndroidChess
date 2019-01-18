@@ -9,11 +9,11 @@
     <string name="ai">AI</string>
     <string name="undo">Undo</string>
     <string name="next_move">Next move</string>
-    <string name="previous_move">Previous move</string>
+    <string name="previous_move">Prev move</string>
     <string name="mode">Mode</string>
-    <string name="pregame">Pregame</string>
     <string name="white">White</string>
     <string name="play">Play</string>
+    <string name="game_settings">Game Settings</string>
 
     <string-array name="gameSortChoices">
         <item>Name</item>
@@ -21,8 +21,8 @@
     </string-array>
 
     <string-array name="modeChoices">
-        <item>PVP</item>
-        <item>PVC</item>
+        <item>2 Players</item>
+        <item>1 Player</item>
     </string-array>
 
     <string-array name="whiteChoices">
