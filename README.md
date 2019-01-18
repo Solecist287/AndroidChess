@@ -5,7 +5,7 @@ Clone this repository into some directory and import it into **Android Studio** 
 ```
 git clone https://github.com/Solecist287/AndroidChess.git
 ```
-Only supports Nexus 4 size for now.
+Works on all smartphones.
 Only supports Android Pie.
 ## Tools Used
 * Java 8
@@ -18,7 +18,9 @@ Only supports Android Pie.
 * Check warnings, checkmate, stalemate
 * Two game modes
     * Player v Player
-    * Player v Computer (AI does random move)
+    * Player v Computer
+          * AI does random move
+          * Can choose who is White
 * Save games and replay them move by move
 ## How to use
 ### Moving pieces
