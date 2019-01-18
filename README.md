@@ -18,7 +18,7 @@ Only supports Android Pie.
 * Check warnings, checkmate, stalemate
 * Two game modes
     * Player v Player
-    * Player v Computer(AI does a random move and White is selected by user)
+    * Player v Computer (AI does a random move and White is selected by user)
 * Save games and replay them move by move
 ## How to use
 ### Moving pieces
