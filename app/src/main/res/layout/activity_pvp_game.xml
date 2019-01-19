@@ -1,41 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.PVPGameActivity"
-    android:orientation="vertical"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent">
+    tools:context=".Activities.PVPGameActivity">
+
+    <TextView
+        android:id="@+id/pvpHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Player vs Player"
+        android:textSize="24sp"
+        android:layout_alignParentTop="true"
+        android:paddingHorizontal="10dp"/>
 
     <LinearLayout
+        android:id="@+id/topButtonBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_below="@id/pvpHeader">
 
         <Button
-            android:layout_width="78dp"
-            android:layout_height="37dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp"
-            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:onClick="resign"
             android:text="@string/resign"
             style="?android:attr/borderlessButtonStyle"/>
         <Button
-            android:layout_width="78dp"
-            android:layout_height="37dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp"
-            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:onClick="draw"
             android:text="@string/draw"
             style="?android:attr/borderlessButtonStyle"/>
@@ -47,16 +42,15 @@
         android:numColumns="8"
         android:verticalSpacing="0dp"
         android:horizontalSpacing="0dp"
-        android:layout_gravity="center_horizontal">
+        android:layout_centerInParent="true"
+        android:layout_below="@+id/topButtonBar">
     </GridView>
 
     <Button
-        android:layout_width="78dp"
-        android:layout_height="37dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="20dp"
-        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/pvp_chessboard"
         android:onClick="undoMove"
         android:text="@string/undo"
         style="?android:attr/borderlessButtonStyle"/>
-</LinearLayout>
+</RelativeLayout>
