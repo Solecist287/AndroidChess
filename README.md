@@ -5,7 +5,7 @@ Clone this repository into some directory and import it into **Android Studio** 
 ```
 git clone https://github.com/Solecist287/AndroidChess.git
 ```
-Works on all smartphones.
+Works on all Android phones.
 Only supports Android Pie.
 ## Tools Used
 * Java 8
