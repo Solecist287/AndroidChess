@@ -20,7 +20,7 @@ public class Rook extends Piece{
                 }
             }
             return true;
-        }else if (column == destCol) {//dest in same row
+        }else if (column == destCol) {//dest in same col
             //check spaces in between for obstructions
             for (int i = Math.min(destRow, row)+1; i < Math.max(destRow, row); i++) {
                 if (board[(i*8)+column]!=null) {//piece obstructing
