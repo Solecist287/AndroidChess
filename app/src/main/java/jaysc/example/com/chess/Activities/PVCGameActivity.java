@@ -1,6 +1,5 @@
 package jaysc.example.com.chess.Activities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -98,6 +97,9 @@ public class PVCGameActivity extends GameActivity {
                 }
             }
         }
+        //computer reached a stalemate or checkmate
+        if (generatedMoves.size() == 0){return;}
+        //otherwise proceed with making the move and recording it
         int randomMoveIndex = (int)(Math.random()*generatedMoves.size());
         Piece randomPiece = chessboard[generatedMoves.get(randomMoveIndex).get(0)];
         int randomDest = generatedMoves.get(randomMoveIndex).get(1);
