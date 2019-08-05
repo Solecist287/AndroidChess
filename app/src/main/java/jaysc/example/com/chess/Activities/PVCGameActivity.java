@@ -135,6 +135,7 @@ public class PVCGameActivity extends GameActivity {
             //END GAMMMMEEEEE HEEERRREEE
             showSavePopup(message);
         } else {//normal move but next guy may be in check...
+            if (turn == computer){return;}
             message = ((turn == 'w')?"White's":"Black's") + " turn";
             if (currentKing!=null && currentKing.inCheck(chessboard)) {
                 message+=", CHECK";
