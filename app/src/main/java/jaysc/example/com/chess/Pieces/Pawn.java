@@ -1,6 +1,6 @@
 package jaysc.example.com.chess.Pieces;
 
-import jaysc.example.com.chess.Activities.PVPGameActivity;
+import jaysc.example.com.chess.Activities.GameActivity;
 
 public class Pawn extends Piece{
     private int moved_2_spaces; //set equal to turnCount whenever a pawn moves 2 spaces forward
@@ -42,8 +42,11 @@ public class Pawn extends Piece{
         //pawn may move exactly one space diagonally in either forward direction (must capture or en passant)
         else if (rowDiff == (sign) && Math.abs(colDiff) == 1 && destPiece != null && owner!=destPiece.owner) { //direct capture
             return true;
-        }else if (rowDiff == (sign) && Math.abs(colDiff) == 1 && destPiece == null) { //en passant capturing white's left
-            return board[((destRow + (sign)) * 8) + destCol] != null && board[((destRow + (sign)) * 8) + destCol] instanceof Pawn && board[((destRow + (sign)) * 8) + destCol].moves == 1 && ((Pawn) board[((destRow + (sign)) * 8) + destCol]).moved_2_spaces == PVPGameActivity.turnCount - 1;
+        }else if (rowDiff == (sign) && Math.abs(colDiff) == 1 && destPiece == null) { //en passant
+            return board[((destRow + (sign)) * 8) + destCol] != null
+                    && board[((destRow + (sign)) * 8) + destCol] instanceof Pawn
+                    && board[((destRow + (sign)) * 8) + destCol].moves == 1
+                    && ((Pawn) board[((destRow + (sign)) * 8) + destCol]).moved_2_spaces == GameActivity.turnCount - 1;
         }
         return false;
     }
@@ -60,7 +63,7 @@ public class Pawn extends Piece{
         if (Math.abs(rowDiff) == 1 && Math.abs(colDiff) == 1 && destPiece == null) {//en passant
             board[(row*8)+destCol] = null;
         }else if (Math.abs(rowDiff) == 2) {//two spaces
-            moved_2_spaces = PVPGameActivity.turnCount;
+            moved_2_spaces = GameActivity.turnCount;
         }
         //do normal move
         super.move(destIndex,board);
