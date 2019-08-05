@@ -50,7 +50,30 @@ public abstract class GameActivity extends AppCompatActivity {
         moves = new ArrayList<>();
         lastChessboard = null;
         //create piece array to hold pieces
-        chessboard = initBoard();
+        chessboard = new Piece[64];
+        //black pieces
+        chessboard[0] = new Rook(0, 'b');
+        chessboard[1] = new Knight(1, 'b');
+        chessboard[2] = new Bishop(2, 'b');
+        chessboard[3] = new Queen(3, 'b');
+        chessboard[4] = new King(4, 'b');
+        chessboard[5] = new Bishop(5, 'b');
+        chessboard[6] = new Knight(6, 'b');
+        chessboard[7] = new Rook(7, 'b');
+        //pawns
+        for (int i = 8; i < 16; i++) {
+            chessboard[i] = new Pawn(i, 'b');//black pawns
+            chessboard[i+40] = new Pawn(i+40,'w');//white pawns
+        }
+        //white pieces
+        chessboard[56] = new Rook(56, 'w');
+        chessboard[57] = new Knight(57, 'w');
+        chessboard[58] = new Bishop(58, 'w');
+        chessboard[59] = new Queen(59, 'w');
+        chessboard[60] = new King(60, 'w');
+        chessboard[61] = new Bishop(61, 'w');
+        chessboard[62] = new Knight(62, 'w');
+        chessboard[63] = new Rook(63, 'w');
         //create adapter to connect to pieces' images/chessboard positions
         chessboardAdapter = new ChessboardAdapter(this, chessboard);
         //fetch gridview from xml variable name
@@ -58,34 +81,6 @@ public abstract class GameActivity extends AppCompatActivity {
         //create and set view
         chessboardView = findViewById(getChessboardId());
         chessboardView.setAdapter(chessboardAdapter);
-    }
-
-    public static Piece[] initBoard() {
-        Piece[] board = new Piece[64];
-        //black pieces
-        board[0] = new Rook(0, 'b');
-        board[1] = new Knight(1, 'b');
-        board[2] = new Bishop(2, 'b');
-        board[3] = new Queen(3, 'b');
-        board[4] = new King(4, 'b');
-        board[5] = new Bishop(5, 'b');
-        board[6] = new Knight(6, 'b');
-        board[7] = new Rook(7, 'b');
-        //pawns
-        for (int i = 8; i < 16; i++) {
-            board[i] = new Pawn(i, 'b');//black pawns
-            board[i+40] = new Pawn(i+40,'w');//white pawns
-        }
-        //white pieces
-        board[56] = new Rook(56, 'w');
-        board[57] = new Knight(57, 'w');
-        board[58] = new Bishop(58, 'w');
-        board[59] = new Queen(59, 'w');
-        board[60] = new King(60, 'w');
-        board[61] = new Bishop(61, 'w');
-        board[62] = new Knight(62, 'w');
-        board[63] = new Rook(63, 'w');
-        return board;
     }
 
     public static Piece[] duplicateBoard(Piece[] p) {
