@@ -1,24 +1,8 @@
 package jaysc.example.com.chess.Activities;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.Toast;
-
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.BiFunction;
-
 import jaysc.example.com.chess.Adapters.ChessboardAdapter;
 import jaysc.example.com.chess.R;
 import jaysc.example.com.chess.Pieces.*;

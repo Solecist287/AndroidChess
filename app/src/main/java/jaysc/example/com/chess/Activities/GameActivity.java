@@ -27,7 +27,6 @@ import jaysc.example.com.chess.Pieces.Pawn;
 import jaysc.example.com.chess.Pieces.Piece;
 import jaysc.example.com.chess.Pieces.Queen;
 import jaysc.example.com.chess.Pieces.Rook;
-import jaysc.example.com.chess.R;
 
 public abstract class GameActivity extends AppCompatActivity {
     protected char turn;//white('w') or black('b') player
