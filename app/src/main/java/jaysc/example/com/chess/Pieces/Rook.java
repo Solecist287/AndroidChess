@@ -11,25 +11,23 @@ public class Rook extends Piece{
         Piece destPiece = board[destIndex];
         //if destination has a piece, then destpiece and currentpiece must be on different teams
         if (destPiece!=null && destPiece.owner == owner) {return false;}
+        //destination can only differ by row or col, not both
+        if (row != destRow && column != destCol){return false;}
+        //increments to use to search squares between start and dest
+        int colIncr = column != destCol ? 1 : 0;
+        int rowIncr = row != destRow ? 1 : 0;
+        //row and col loop vars, start at square ahead of start
+        int r = Math.min(row, destRow) + rowIncr;
+        int c = Math.min(column, destCol) + colIncr;
         //check if dest is in moveset of piece
-        if (row == destRow) {//dest in same row
-            //check spaces in between for obstructions
-            for (int i = Math.min(destCol, column)+1; i < Math.max(destCol, column); i++) {
-                if (board[(row*8)+i]!=null) {//piece obstructing
-                    return false;
-                }
+        while (r * 8 + c < Math.max(index, destIndex)){
+            if (board[r * 8 + c] != null){
+                return false;
             }
-            return true;
-        }else if (column == destCol) {//dest in same col
-            //check spaces in between for obstructions
-            for (int i = Math.min(destRow, row)+1; i < Math.max(destRow, row); i++) {
-                if (board[(i*8)+column]!=null) {//piece obstructing
-                    return false;
-                }
-            }
-            return true;
+            r += rowIncr;
+            c += colIncr;
         }
-        return false;
+        return true;
     }
     public int getImageIndex(){
         if (owner == 'b') return 10; else return 11;
