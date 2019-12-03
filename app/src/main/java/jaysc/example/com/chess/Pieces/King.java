@@ -20,10 +20,11 @@ public class King extends Piece{
         if (destPiece!=null && destPiece.owner == owner) {
             return false;
         }
-        //own spot is handled in previous case
-        if ((absRowDiff==0||absRowDiff==1) && (absColDiff==0||absColDiff==1)) {
+
+        if (!(absRowDiff == 0 && absColDiff == 0) && absRowDiff <= 1 && absColDiff <= 1){
             return true;
-        }else if (absRowDiff==0 && absColDiff==2 && moves == 0) {//CASTLINGGGGGG: same row, two cols away
+        }
+        if (absRowDiff==0 && absColDiff==2 && moves == 0) {//CASTLINGGGGGG: same row, two cols away
             //test if king's start position, in between, and dest are in check
             for (int i = Math.min(column,destCol); i <= Math.max(column,destCol); i++) {
                 //if any position from start to end is in check OR if there is obstructing piece(besides king lol)
@@ -31,15 +32,9 @@ public class King extends Piece{
                     return false;
                 }
             }
-            Piece rook;//possibly castling rook
-            if (colDiff > 0) {//left rook castling for white, right rook castling for black
-                rook = board[row*8];//could be a rook, gotta check
-            }else{//right rook castling for white, left rook castling for black
-                rook = board[(row*8)+7];
-            }
-            //if there is a rook who is ours and never moved(including our king)
-            //can assume it is a rook since it never moved and in position of where rooks are
-            return rook != null && rook.owner == this.owner && rook.moves == 0;
+            Piece rook = colDiff > 0 ? board[row*8] : board[(row*8)+7];//possibly castling rook
+            //return if a stationary king has an existent, stationary rook
+            return rook != null && rook.owner == this.owner && rook instanceof Rook && rook.moves == 0;
         }
         return false;
     }
