@@ -19,7 +19,7 @@ public class Rook extends Piece{
         //row and col loop vars, start at square ahead of start
         int r = Math.min(row, destRow) + rowIncr;
         int c = Math.min(column, destCol) + colIncr;
-        //check if dest is in moveset of piece
+        //check if spaces between self and dest are empty
         while (r * 8 + c < Math.max(index, destIndex)){
             if (board[r * 8 + c] != null){
                 return false;

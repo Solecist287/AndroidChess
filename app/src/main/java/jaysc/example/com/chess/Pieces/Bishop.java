@@ -9,50 +9,25 @@ public class Bishop extends Piece{
         int destRow = destIndex/8;
         int destCol = destIndex%8;
         Piece destPiece = board[destIndex];
-        //find differences between rows and columns
-        int rowDiff = row - destRow;//x
-        int colDiff = column - destCol;//y
-        //used to check for obstructing pieces
-        int curRow;
-        int curCol;
-        int endRow;
-        int endCol;
-
-        //check if dest is diagonal from bishop
-        //also checks that if dest is occupied, that it is enemy piece
-        if (Math.abs(rowDiff) != Math.abs(colDiff) || (destPiece!=null && destPiece.owner == owner)) {
+        //also checks if dest is diagonal and occupied by fellow piece
+        if (Math.abs(row - destRow) != Math.abs(column - destCol) || (destPiece!=null && destPiece.owner == owner)) {
             return false;
         }
-        if ((rowDiff>0 && colDiff>0)||(rowDiff<0 && colDiff<0)) {//top left or bottom right diagonal
-            curRow = Math.min(row, destRow)+1;
-            curCol = Math.min(column, destCol)+1;
-            endRow = Math.max(row, destRow);
-            endCol = Math.max(column, destCol);
-            while (curRow<endRow && curCol<endCol) {
-                int curIndex = (curRow*8)+curCol;
-                if (board[curIndex]!=null) {//if piece is obstructing
-                    return false;
-                }
-                curRow++;
-                curCol++;
+        //increments to use to search squares between start and dest
+        int rowIncr = 1;
+        int colIncr = Math.min(index, destIndex)%8 < Math.max(index, destIndex)%8 ? 1 : -1;
+        //row and col loop vars, start at square ahead of start
+        int r = Math.min(index, destIndex)/8 + rowIncr;
+        int c = Math.min(index, destIndex)%8 + colIncr;
+        //check if spaces between self and dest are empty
+        while (r * 8 + c < Math.max(index, destIndex)){
+            if (board[r * 8 + c] != null){
+                return false;
             }
-            return true;
-        }else if ((rowDiff>0 && colDiff<0)||(rowDiff<0 && colDiff>0)) {//top right or bottom left diagonal
-            curRow = Math.max(row, destRow)-1;
-            curCol = Math.min(column, destCol)+1;
-            endRow = Math.min(row, destRow);
-            endCol = Math.max(column, destCol);
-            while (curRow>endRow && curCol<endCol) {
-                int curIndex = (curRow*8)+curCol;
-                if (board[curIndex]!=null) {//if piece is obstructing
-                    return false;
-                }
-                curRow--;
-                curCol++;
-            }
-            return true;
+            r += rowIncr;
+            c += colIncr;
         }
-        return false;
+        return true;
     }
     public int getImageIndex(){
         if (owner == 'b') return 0; else return 1;
