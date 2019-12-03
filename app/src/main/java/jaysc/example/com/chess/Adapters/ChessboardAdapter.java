@@ -39,7 +39,7 @@ public class ChessboardAdapter extends BaseAdapter {
     // create a new ImageView for each item referenced by the Adapter
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView imageView;
-        if (convertView == null) {
+        if (convertView == null){
             // if it's not recycled, initialize some attributes
             int side = (mContext.getResources().getDisplayMetrics().widthPixels)/8;
             imageView = new ImageView(mContext);
@@ -49,26 +49,19 @@ public class ChessboardAdapter extends BaseAdapter {
             //choose black or white for square
             int row = position/8;
             int col = position%8;
-            if ((row%2==0&&col%2==0)||(row%2!=0&&col%2!=0)){//white space
-                imageView.setBackgroundColor(Color.parseColor("#d8d8d8")); //#9E9DA3
-            }else{//black space
-                imageView.setBackgroundColor(Color.parseColor("#30313e")); //#716792
-            }
-        } else {
-            imageView = (ImageView) convertView;
+            //if row and col both even/odd then light, otherwise dark square
+            String squareColor = (row%2 == col%2) ? "#d8d8d8" : "#30313e";
+            imageView.setBackgroundColor(Color.parseColor(squareColor));
+        }else{
+            imageView = (ImageView)convertView;
         }
         //choose which image to assign it
         Piece p = pieces[position];
-        if (p==null) {
-            imageView.setImageResource(0);
-        }else {
-            imageView.setImageResource(pieceImgs.getResourceId(p.getImageIndex(),0));
-        }
-        if (position == selectedPieceIndex) {
-            imageView.setColorFilter(Color.CYAN);
-        }else{
-            imageView.setColorFilter(0);
-        }
+        //set image (piece image or "empty") for imageview
+        int imageRes = (p == null) ? 0 : pieceImgs.getResourceId(p.getImageIndex(), 0);
+        imageView.setImageResource(imageRes);
+        //set highlight if position is selected
+        imageView.setColorFilter((position == selectedPieceIndex) ? Color.CYAN : 0);
         return imageView;
     }
 }
