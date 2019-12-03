@@ -21,31 +21,35 @@ public class Pawn extends Piece{
         Piece destPiece = board[destIndex];
 
         //find differences between rows and columns
-        int rowDiff = row - destRow;//x
-        int colDiff = column - destCol;//y
+        int rowDiff = row - destRow;
+        int colDiff = column - destCol;
 
-        //cannot capture own piece
-        if (destPiece != null && destPiece.owner == owner) {
-            return false;
-        }
         int sign = owner == 'w' ? 1 : -1;//1 for white, -1 for black
         //pawn may move exactly one space forward
         if (destRow == row - (sign) && destCol == column && destPiece == null) {
             return true;
         }
         //pawn may move exactly two spaces forward
-        else if (destRow == row - (2*sign) && destCol == column && board [((row - (sign))*8)+ column] == null
+        if (destRow == row - (2*sign) && destCol == column && board [(row - sign) * 8 + column] == null
                     && destPiece == null && moves==0) {
                 return true;
         }
-        //pawn may move exactly one space diagonally in either forward direction (must capture or en passant)
-        else if (rowDiff == (sign) && Math.abs(colDiff) == 1 && destPiece != null && owner!=destPiece.owner) { //direct capture
-            return true;
-        }else if (rowDiff == (sign) && Math.abs(colDiff) == 1 && destPiece == null) { //en passant
-            return board[((destRow + (sign)) * 8) + destCol] != null
-                    && board[((destRow + (sign)) * 8) + destCol] instanceof Pawn
-                    && board[((destRow + (sign)) * 8) + destCol].moves == 1
-                    && ((Pawn) board[((destRow + (sign)) * 8) + destCol]).moved_2_spaces == GameActivity.turnCount - 1;
+        //pawn moving diagonal
+        if (rowDiff == sign && Math.abs(colDiff) == 1) {
+            //direct capture
+            if (destPiece != null && destPiece.owner != owner) {
+                return true;
+            }
+            //en passant?
+            Piece enPassantVictim = board[((destRow + (sign)) * 8) + destCol];
+            if (destPiece == null
+                    && enPassantVictim != null
+                    && enPassantVictim.owner != owner
+                    && enPassantVictim instanceof Pawn
+                    && ((Pawn) enPassantVictim).moved_2_spaces != -1
+                    && ((Pawn) enPassantVictim).moved_2_spaces == GameActivity.turnCount - 1){
+                return true;
+            }
         }
         return false;
     }
