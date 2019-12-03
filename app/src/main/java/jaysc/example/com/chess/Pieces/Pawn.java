@@ -28,8 +28,7 @@ public class Pawn extends Piece{
         if (destPiece != null && destPiece.owner == owner) {
             return false;
         }
-        int sign;//1 for white, -1 for black
-        if (owner == 'w')sign=1; else sign=-1;
+        int sign = owner == 'w' ? 1 : -1;//1 for white, -1 for black
         //pawn may move exactly one space forward
         if (destRow == row - (sign) && destCol == column && destPiece == null) {
             return true;
